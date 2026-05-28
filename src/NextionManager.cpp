@@ -5,6 +5,8 @@
 // CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
 // =========================================================
 
+bool luzSalaExtra = 0;
+
 // Velocidade padrão de comunicação serial do Nextion
 const uint32_t BAUD_NEXTION = 9600;
 
@@ -21,29 +23,24 @@ const int8_t PINO_TX_NEXTION = 17;
 // A estrutura é:
 // Classe nomeDoObjeto(pageId, componentId, "nomeNoNextion");
 
-// Evite chamar a variável de j0, porque existe uma função matemática j0()
-// na biblioteca padrão do C/C++.
-NexProgressBar barraJ0(0, 2, "j0");
+NexButton botaoBackLuz1(1, 4, "b0");
+NexButton botaoBackLuz2(2, 8, "b0");
+NexButton botaoBackAc1(3, 2, "b0");
+NexButton botaoBackAc2(5, 2, "b0");
+NexButton botaoBackAc3(5, 2, "b0");
+NexButton botaoBackProj1(6, 2, "b0");
+NexButton botaoBackProj2(7, 2, "b0");
+NexButton botaoBackTv1(8, 2, "b0");
+NexButton botaoBackTv2(9, 2, "b0");
+NexButton botaoBackTv3(10, 2, "b0");
 
-// Componentes que recebem toque
-NexButton botaoB0(0, 3, "b0");
-NexSlider sliderH0(0, 4, "h0");
-NexDSButton botaoDualBt0(0, 5, "bt0");
+// Tela Inicial
 
-// Textos usados para mostrar o estado dos componentes
-NexText textoT1(0, 6, "t1");
-NexText textoT2(0, 7, "t2");
-NexText textoT3(0, 8, "t3");
-NexText textoT4(0, 9, "t4");
+NexButton botaoLuz(0, 2, "b0");
 
 // =========================================================
 // VARIÁVEIS DE CONTROLE DA APLICAÇÃO
 // =========================================================
-
-uint32_t valorBarra = 0;
-uint32_t contadorBotao = 0;
-uint32_t valorSlider = 0;
-uint32_t estadoBotaoDual = 0;
 
 // Buffer usado para montar textos antes de enviar ao display
 char texto[50];
@@ -57,7 +54,6 @@ void configurarTelaInicial();
 void configurarEventosNextion();
 
 void botaoBack();
-
 
 // =========================================================
 // CONFIGURAÇÃO DO NEXTION
@@ -90,26 +86,9 @@ void configurarTelaInicial()
 {
     // Garante que o display esteja na página principal.
     // O nome "page0" precisa ser igual ao nome da página no Nextion Editor.
-    sendCommand("page page0");
+    sendCommand("page inicial");
 
     delay(500);
-
-    // Define os valores iniciais da aplicação.
-    valorBarra = 0;
-    contadorBotao = 0;
-    valorSlider = 0;
-    estadoBotaoDual = 0;
-
-    // Atualiza os componentes visuais do display.
-    barraJ0.setValue(valorBarra);
-    sliderH0.setValue(valorSlider);
-    botaoDualBt0.setValue(estadoBotaoDual);
-
-    // Atualiza os textos iniciais.
-    textoT1.setText("j0 = 0%");
-    textoT2.setText("b0 aguardando");
-    textoT3.setText("h0 = 0");
-    textoT4.setText("bt0 = Desligado");
 }
 
 // =========================================================
@@ -121,16 +100,36 @@ void configurarEventosNextion()
     // attachPop() executa a função quando o componente é solto.
     // No Nextion Editor, use "Send Component ID" em Touch Release Event.
 
-    botaoB0.attachPop(botaoBack);
+    botaoBackLuz1.attachPop(botaoBack);
+    botaoBackLuz2.attachPop(botaoBack);
+    botaoBackAc1.attachPop(botaoBack);
+    botaoBackAc2.attachPop(botaoBack);
+    botaoBackAc3.attachPop(botaoBack);
+    botaoBackProj1.attachPop(botaoBack);
+    botaoBackProj2.attachPop(botaoBack);
+    botaoBackTv1.attachPop(botaoBack);
+    botaoBackTv2.attachPop(botaoBack);
+    botaoBackTv3.attachPop(botaoBack);
+    
+    botaoLuz.attachPop(telaLuz);
     
 
     // Limpa a lista interna de componentes monitorados.
     nexClearListenList();
 
     // Registra quais componentes devem ser ouvidos pelo ESP32.
-    nexListen(botaoB0);
-    nexListen(sliderH0);
-    nexListen(botaoDualBt0);
+    nexListen(botaoBackLuz1);
+    nexListen(botaoBackLuz2);
+    nexListen(botaoBackAc1);
+    nexListen(botaoBackAc2);
+    nexListen(botaoBackAc3);
+    nexListen(botaoBackProj1);
+    nexListen(botaoBackProj2);
+    nexListen(botaoBackTv1);
+    nexListen(botaoBackTv2);
+    nexListen(botaoBackTv3);
+
+    nexListen(botaoLuz);
 }
 
 void botaoBack()
@@ -139,3 +138,10 @@ void botaoBack()
     sendCommand("page inicial");
 }
 
+void telaLuz()
+{
+    if(luzSalaExtra)
+    sendCommand("page luz2");
+    else
+    sendCommand("page luz1");
+}
