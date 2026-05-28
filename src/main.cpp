@@ -1,280 +1,137 @@
 #include <Arduino.h>
-#include <Nextion.h>
+#include <Adafruit_NeoPixel.h>
+#include <ArduinoJson.h>
 
-// =========================================================
-// CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
-// =========================================================
+#include "WiFiManager.h"
+#include "MqttManager.h"
+#include "DebugManager.h"
 
-// Velocidade padrão de comunicação serial do Nextion
-const uint32_t BAUD_NEXTION = 9600;
 
-// RX do ESP32-S3 ligado ao TX do Nextion
-const int8_t PINO_RX_NEXTION = 18;
+const uint8_t PINO_LED_RGB = 48;
+const uint8_t QUANTIDADE_LEDS = 1;
+const uint8_t pinLampada = 38;
 
-// TX do ESP32-S3 ligado ao RX do Nextion
-const int8_t PINO_TX_NEXTION = 17;
+const char TOPICO_COMANDO[] = "senai/kelvin/esp32/comando";
 
-// =========================================================
-// COMPONENTES DO NEXTION
-// =========================================================
+Adafruit_NeoPixel ledRGB(
+    QUANTIDADE_LEDS,
+    PINO_LED_RGB,
+    NEO_GRB + NEO_KHZ800       //Duas constantes que definem a saidas do rgb e a frquencia de propagacao da informacao entre os LED`s, nesse caso é igual a 82
+);
 
-// A estrutura é:
-// Classe nomeDoObjeto(pageId, componentId, "nomeNoNextion");
 
-// Evite chamar a variável de j0, porque existe uma função matemática j0()
-// na biblioteca padrão do C/C++.
-NexProgressBar barraJ0(0, 2, "j0");
+void configuraLedRGB();
+void alterarCorLedRGB(int vermelho, int verde, int azul);
+void tratarJsonComando(const String& mensagem);
+void updateLampada(bool estado);
 
-// Componentes que recebem toque
-NexButton botaoB0(0, 3, "b0");
-NexSlider sliderH0(0, 4, "h0");
-NexDSButton botaoDualBt0(0, 5, "bt0");
+void tratarMensagemRecebida(const char* topico, const String& mensagem);
 
-// Textos usados para mostrar o estado dos componentes
-NexText textoT1(0, 6, "t1");
-NexText textoT2(0, 7, "t2");
-NexText textoT3(0, 8, "t3");
-NexText textoT4(0, 9, "t4");
-
-// =========================================================
-// VARIÁVEIS DE CONTROLE DA APLICAÇÃO
-// =========================================================
-
-uint32_t valorBarra = 0;
-uint32_t contadorBotao = 0;
-uint32_t valorSlider = 0;
-uint32_t estadoBotaoDual = 0;
-
-// Buffer usado para montar textos antes de enviar ao display
-char texto[50];
-
-// =========================================================
-// PROTÓTIPOS DAS FUNÇÕES
-// =========================================================
-
-void configurarNextion();
-void configurarTelaInicial();
-void configurarEventosNextion();
-
-void botaoB0Soltou();
-void sliderH0Soltou();
-void botaoDualBt0Soltou();
-
-void atualizarTextoBarra();
-void atualizarTextoBotao();
-void atualizarTextoSlider();
-void atualizarTextoBotaoDual();
-
-// =========================================================
-// SETUP
-// =========================================================
-
-void setup()
+void setup() 
 {
-    Serial.begin(115200);
-    delay(1000);
+configDebug();
+pinMode(pinLampada, OUTPUT);
 
-    Serial.println();
-    Serial.println("Iniciando exemplo com ESP32-S3 e Nextion...");
+configuraLedRGB();
 
-    configurarNextion();
-    configurarTelaInicial();
-    configurarEventosNextion();
-
-    Serial.println("Sistema iniciado.");
+connectToWifi();
+configureMQTT();
+registerCallbackMessage(tratarMensagemRecebida);
+connectToMQTT();
 }
 
-// =========================================================
-// LOOP
-// =========================================================
-
-void loop()
+void loop() 
 {
-    // Mantém o ESP32 ouvindo os eventtaoDualBt0Solos enviados pelo Nextion.
-    // Quando o usuário toca em algum componente registrado com nexListen(),
-    // a biblioteca identifica o componente e executa a função associada.
-    nexLoop();
+    grantWiFiAccess();
+    grantMQTTConnection();
+    loopMQTT();
 }
 
-// =========================================================
-// CONFIGURAÇÃO DO NEXTION
-// =========================================================
-
-void configurarNextion()
+void tratarMensagemRecebida(const char* topico, const String& mensagem)
 {
-    // Inicializa a comunicação serial com o display Nextion.
-    // Parâmetros:
-    // 1. baud rate
-    // 2. pino RX do ESP32-S3
-    // 3. pino TX do ESP32-S3
-    bool nextionOk = nexInit(BAUD_NEXTION, PINO_RX_NEXTION, PINO_TX_NEXTION);
+  debugInfo("==============================");
+  debugInfo("Mensagem recebida na aplicação");
+  debugInfo("==============================");
+  
+  if(topico == nullptr)
+  {
+    debugError("Tópico MQTT inválido");
+    return;
+  }
+  
+  debugInfo("Tópico: " + String(topico));
+  debugInfo("Mensagem: " + mensagem);
 
-    if (!nextionOk)
-    {
-        Serial.println("Aviso: o Nextion nao confirmou a inicializacao.");
-    }
-    else
-    {
-        Serial.println("Nextion inicializado.");
-    }
+  if(strcmp(topico, TOPICO_COMANDO) == 0)
+  {
+    tratarJsonComando(mensagem);
+    return;
+  }
+
+  debugError("Tópico não tratado: " + String(topico));
+
 }
 
-// =========================================================
-// CONFIGURAÇÃO INICIAL DA TELA
-// =========================================================
 
-void configurarTelaInicial()
+void configuraLedRGB()
 {
-    // Garante que o display esteja na página principal.
-    // O nome "page0" precisa ser igual ao nome da página no Nextion Editor.
-    sendCommand("page page0");
-
-    delay(500);
-
-    // Define os valores iniciais da aplicação.
-    valorBarra = 0;
-    contadorBotao = 0;
-    valorSlider = 0;
-    estadoBotaoDual = 0;
-
-    // Atualiza os componentes visuais do display.
-    barraJ0.setValue(valorBarra);
-    sliderH0.setValue(valorSlider);
-    botaoDualBt0.setValue(estadoBotaoDual);
-
-    // Atualiza os textos iniciais.
-    textoT1.setText("j0 = 0%");
-    textoT2.setText("b0 aguardando");
-    textoT3.setText("h0 = 0");
-    textoT4.setText("bt0 = Desligado");
+    ledRGB.begin();
+    ledRGB.setBrightness(80);   //Colocamos a qtd de brilho para o led de 0 a 255
+    ledRGB.clear();
+    ledRGB.show();      //atualiza estado led
 }
 
-// =========================================================
-// CONFIGURAÇÃO DOS EVENTOS DO NEXTION
-// =========================================================
-
-void configurarEventosNextion()
+void alterarCorLedRGB(int vermelho, int verde, int azul)
 {
-    // attachPop() executa a função quando o componente é solto.
-    // No Nextion Editor, use "Send Component ID" em Touch Release Event.
-
-    botaoB0.attachPop(botaoB0Soltou);
-    sliderH0.attachPop(sliderH0Soltou);
-    botaoDualBt0.attachPop(botaoDualBt0Soltou);
+    vermelho = constrain(vermelho, 0 ,255);
+    verde  = constrain(verde, 0 ,255);
+    azul = constrain(azul, 0 ,255);
     
+    ledRGB.setPixelColor(0, ledRGB.Color(vermelho, verde, azul));
+    ledRGB.show();
 
-    // Limpa a lista interna de componentes monitorados.
-    nexClearListenList();
+    debugInfo("Cor aplicada o LED RGB");
+    debugInfo("R: " + String(vermelho));
+    debugInfo("G: " + String(verde));
+    debugInfo("B: " + String(azul));
 
-    // Registra quais componentes devem ser ouvidos pelo ESP32.
-    nexListen(botaoB0);
-    nexListen(sliderH0);
-    nexListen(botaoDualBt0);
+
 }
 
-// =========================================================
-// EVENTO DO BOTÃO b0
-// =========================================================
-
-void botaoB0Soltou()
+void updateLampada(bool estado)
 {
-    Serial.println("Botao b0 solto.");
+  digitalWrite(pinLampada, estado);
+}
 
-    // Conta quantas vezes o botão foi clicado.
-    contadorBotao++;
+void tratarJsonComando(const String& mensagem)
+{
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, mensagem);
 
-    // A cada clique, aumenta a barra de progresso em 10%.
-    valorBarra += 10;
+  if(error)
+  {
+    debugError("Erro ao interpretar JSON.");
+    debugError(error.c_str());
+    return;
+  }
 
-    // Quando passar de 100%, volta para 0%.
-    if (valorBarra > 100)
+  if(!doc["led"].is<JsonObject>() && !doc["lampada"].is<JsonObject>())
+  {
+    if(!doc["led"]["r"].is<int>() || !doc["led"]["g"].is<int>() || !doc["led"]["b"].is<int>() || !doc["led"].is<bool>())
     {
-        valorBarra = 0;
+      debugError("JSON Inválido. Use led.r, led.g e led.b e lampada");
+      return;
     }
-
-    // Atualiza a barra no display.
-    barraJ0.setValue(valorBarra);
-// Componentes que recebem toque
-    // Atualiza os textos relacionados ao botão e à barra.
-    atualizarTextoBarra();
-    atualizarTextoBotao();
-}
-
-// =========================================================
-// EVENTO DO SLIDER h0
-// =========================================================
-
-void sliderH0Soltou()
-{
-    Serial.println("Slider h0 solto.");
-
-    // Lê o valor atual do slider no Nextion.
-    // A biblioteca grava o// Componentes que recebem toque valor dentro da variável valorSlider.
-    sliderH0.getValue(&valorSlider);
-
-    atualizarTextoSlider();
-
-    Serial.print("Valor do slider h0 = ");
-    Serial.println(valorSlider);
-}
-
-// =========================================================
-// EVENTO DO DUAL STATE BUTTON bt0
-// =========================================================
-
-void botaoDualBt0Soltou()
-{
-    Serial.println("Botao dual bt0 solto.");
-
-    // Lê o valor atual do Dual State Button.
-    // Normalmente:
-    // 0 = desligado
-    // 1 = ligado
-    botaoDualBt0.getValue(&estadoBotaoDual);
-
-    atualizarTextoBotaoDual();
-
-    Serial.print("Estado do bt0 = ");
-    Serial.println(estadoBotaoDual);
-}
-
-// =========================================================
-// FUNÇÕES DE ATUALIZAÇÃO DOS TEXTOS
-// =========================================================
-
-void atualizarTextoBarra()
-{
-    // snprintf monta o texto de forma segura dentro do vetor texto.
-    // Exemplo final: j0 = 30%
-    snprintf(texto, sizeof(texto), "j0 = %lu%%", valorBarra);
-
-    textoT1.setText(texto);
-}
-
-void atualizarTextoBotao()
-{
-    // Exemplo final: b0 clicado 3x
-    snprintf(texto, sizeof(texto), "b0 clicado %lux", contadorBotao);
-
-    textoT2.setText(texto);
-}
-
-void atualizarTextoSlider()
-{
-    // Exemplo final: h0taoDualBt0Sol = 75
-    snprintf(texto, sizeof(texto), "h0 = %lu", valorSlider);
-
-    textoT3.setText(texto);
-}
-
-void atualizarTextoBotaoDual()
-{
-    if (estadoBotaoDual == 1)
-    {
-        textoT4.setText("bt0 = Ligado");
-    }
-    else
-    {
-        textoT4.setText("bt0 = Desligado");
-    }
+  }
+  
+  else
+  {
+    int vermelho = doc["led"]["r"].as<int>();
+    int verde = doc["led"]["g"].as<int>();
+    int azul = doc["led"]["b"].as<int>();
+    bool lampada = doc["lampada"].as<bool>();
+  
+    updateLampada(lampada);
+    alterarCorLedRGB(vermelho, verde, azul);
+  }
 }
