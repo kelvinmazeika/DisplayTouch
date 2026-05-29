@@ -1,11 +1,16 @@
 #include <Arduino.h>
 #include <Nextion.h>
+#include "NextionManager.h"
+#include "DisplayButtons.h"
 
 // =========================================================
 // CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
 // =========================================================
 
 bool luzSalaExtra = 0;
+bool arSalaExtra = 0;
+bool projSalaExtra = 0;
+bool tvSalaExtra = 0;
 
 // Velocidade padrão de comunicação serial do Nextion
 const uint32_t BAUD_NEXTION = 9600;
@@ -15,32 +20,6 @@ const int8_t PINO_RX_NEXTION = 18;
 
 // TX do ESP32-S3 ligado ao RX do Nextion
 const int8_t PINO_TX_NEXTION = 17;
-
-// =========================================================
-// COMPONENTES DO NEXTION
-// =========================================================
-
-// A estrutura é:
-// Classe nomeDoObjeto(pageId, componentId, "nomeNoNextion");
-
-NexButton botaoBackLuz1(1, 4, "b0");
-NexButton botaoBackLuz2(2, 8, "b0");
-NexButton botaoBackAc1(3, 2, "b0");
-NexButton botaoBackAc2(5, 2, "b0");
-NexButton botaoBackAc3(5, 2, "b0");
-NexButton botaoBackProj1(6, 2, "b0");
-NexButton botaoBackProj2(7, 2, "b0");
-NexButton botaoBackTv1(8, 2, "b0");
-NexButton botaoBackTv2(9, 2, "b0");
-NexButton botaoBackTv3(10, 2, "b0");
-
-// Tela Inicial
-
-NexButton botaoLuz(0, 2, "b0");
-
-// =========================================================
-// VARIÁVEIS DE CONTROLE DA APLICAÇÃO
-// =========================================================
 
 // Buffer usado para montar textos antes de enviar ao display
 char texto[50];
@@ -54,10 +33,22 @@ void configurarTelaInicial();
 void configurarEventosNextion();
 
 void botaoBack();
+void telaLuz();
+void telaAr();
+void telaProj();
+void telaTv();
+void telaSens();
+void telaSettings();
 
-// =========================================================
-// CONFIGURAÇÃO DO NEXTION
-// =========================================================
+void addSalaExtraLuz();
+void addSalaExtraAc();
+void addSalaExtraProj();
+void addSalaExtraTv();
+void removeSalaExtraLuz();
+void removeSalaExtraAc();
+void removeSalaExtraProj();
+void removeSalaExtraTv();
+
 
 void configurarNextion()
 {
@@ -78,10 +69,6 @@ void configurarNextion()
     }
 }
 
-// =========================================================
-// CONFIGURAÇÃO INICIAL DA TELA
-// =========================================================
-
 void configurarTelaInicial()
 {
     // Garante que o display esteja na página principal.
@@ -91,15 +78,8 @@ void configurarTelaInicial()
     delay(500);
 }
 
-// =========================================================
-// CONFIGURAÇÃO DOS EVENTOS DO NEXTION
-// =========================================================
-
 void configurarEventosNextion()
 {
-    // attachPop() executa a função quando o componente é solto.
-    // No Nextion Editor, use "Send Component ID" em Touch Release Event.
-
     botaoBackLuz1.attachPop(botaoBack);
     botaoBackLuz2.attachPop(botaoBack);
     botaoBackAc1.attachPop(botaoBack);
@@ -112,7 +92,24 @@ void configurarEventosNextion()
     botaoBackTv3.attachPop(botaoBack);
     
     botaoLuz.attachPop(telaLuz);
-    
+    botaoAr.attachPop(telaAr);
+    botaoProj.attachPop(telaProj);
+    botaoTv.attachPop(telaTv);
+    botaoSens.attachPop(telaSens);
+    botaoSettings.attachPop(telaSettings);
+
+    adicionarSalaExtraAc.attachPop(addSalaExtraAc);
+    adicionarSalaExtraLuz.attachPop(addSalaExtraLuz);
+    adicionarSalaExtraProj.attachPop(addSalaExtraProj);
+    adicionarSalaExtraTv.attachPop(addSalaExtraTv);
+
+    removerSalaExtraLuz.attachPop(removeSalaExtraLuz);
+    removerSalaExtraAc.attachPop(removeSalaExtraAc);
+    removerSalaExtraAc3.attachPop(removeSalaExtraAc);
+    removerSalaExtraProj.attachPop(removeSalaExtraProj);
+    removerSalaExtraTv.attachPop(removeSalaExtraTv);
+    removerSalaExtraTv2.attachPop(removeSalaExtraTv);
+
 
     // Limpa a lista interna de componentes monitorados.
     nexClearListenList();
@@ -129,12 +126,28 @@ void configurarEventosNextion()
     nexListen(botaoBackTv2);
     nexListen(botaoBackTv3);
 
+    nexListen(adicionarSalaExtraAc);
+    nexListen(adicionarSalaExtraLuz);
+    nexListen(adicionarSalaExtraProj);
+    nexListen(adicionarSalaExtraTv);
+
+    nexListen(removerSalaExtraLuz);
+    nexListen(removerSalaExtraAc);
+    nexListen(removerSalaExtraAc3);
+    nexListen(removerSalaExtraProj);
+    nexListen(removerSalaExtraTv);
+    nexListen(removerSalaExtraTv2);
+
     nexListen(botaoLuz);
+    nexListen(botaoAr);
+    nexListen(botaoProj);
+    nexListen(botaoTv);
+    nexListen(botaoSens);
+    nexListen(botaoSettings);
 }
 
 void botaoBack()
 {
-    Serial.println("Botao b0 solto.");
     sendCommand("page inicial");
 }
 
@@ -145,3 +158,86 @@ void telaLuz()
     else
     sendCommand("page luz1");
 }
+
+void telaAr()
+{
+    if(arSalaExtra)
+    sendCommand("page ac2");
+    else
+    sendCommand("page ac1");
+}
+
+void telaProj()
+{
+    if(projSalaExtra)
+    sendCommand("page proj2");
+    else
+    sendCommand("page proj1");
+}
+
+void telaTv()
+{
+    if(tvSalaExtra)
+    sendCommand("page tv2");
+    else
+    sendCommand("page tv1");
+}
+
+void telaSens()
+{
+    sendCommand("page sens");
+}
+
+void telaSettings()
+{
+    sendCommand("page settings");
+}
+
+void addSalaExtraLuz()
+{
+    luzSalaExtra = 1;
+    telaLuz();
+}
+
+void addSalaExtraAc()
+{
+    arSalaExtra = 1;
+    telaAr();
+}
+
+void addSalaExtraProj()
+{
+    projSalaExtra = 1;
+    telaProj();
+}
+
+void addSalaExtraTv()
+{
+    tvSalaExtra = 1;
+    telaTv();
+}
+
+void removeSalaExtraLuz()
+{
+    luzSalaExtra = 0;
+    telaLuz();
+}
+
+void removeSalaExtraAc()
+{
+    arSalaExtra = 0;
+    telaAr();
+}
+
+void removeSalaExtraProj()
+{
+    projSalaExtra = 0;
+    telaProj();
+}
+
+void removeSalaExtraTv()
+{
+    tvSalaExtra = 0;
+    telaTv();
+}
+
