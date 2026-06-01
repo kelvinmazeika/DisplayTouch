@@ -2,6 +2,7 @@
 #include <Nextion.h>
 #include "DisplayButtons.h"
 #include "NextionManager.h"
+#include "Serialize.h"
 
 // =========================================================
 // CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
@@ -221,4 +222,3 @@ void removeSalaExtraTv()
     tvSalaExtra = 0;
     telaTv();
 }
-
