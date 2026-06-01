@@ -2,6 +2,7 @@
 #include <Nextion.h>
 #include "DisplayButtons.h"
 #include "NextionManager.h"
+#include "Serialize.h"
 
 // =========================================================
 // CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
@@ -11,6 +12,7 @@ bool luzSalaExtra = 0;
 bool arSalaExtra = 0;
 bool projSalaExtra = 0;
 bool tvSalaExtra = 0;
+uint8_t acaoTv;
 
 // Velocidade padrão de comunicação serial do Nextion
 const uint32_t BAUD_NEXTION = 9600;
@@ -90,10 +92,16 @@ void configurarEventosNextion()
     removerSalaExtraTv.attachPop(removeSalaExtraTv);
     removerSalaExtraTv2.attachPop(removeSalaExtraTv);
 
+    // Tela Sala Extra AC
+    pageAc2.attachPop(telaAcPage2);
+    pageAc3.attachPop(telaAcPage3);
+    
+    // Tela Sala Extra TV
+    tvPageB2.attachPop(telaTvPage2);
+    tvPageA3.attachPop(telaTvPage3);
 
-    // Limpa a lista interna de componentes monitorados.
 
-    // Registra quais componentes devem ser ouvidos pelo ESP32.
+
     nexListen(botaoBackLuz1);
     nexListen(botaoBackLuz2);
     nexListen(botaoBackAc1);
@@ -123,6 +131,12 @@ void configurarEventosNextion()
     nexListen(botaoTv);
     nexListen(botaoSens);
     nexListen(botaoSettings);
+
+    nexListen(pageAc2);
+    nexListen(pageAc3);
+
+    nexListen(tvPageB2);
+    nexListen(tvPageA3);
 }
 
 void botaoBack()
@@ -222,3 +236,24 @@ void removeSalaExtraTv()
     telaTv();
 }
 
+void telaAcPage2()
+{
+    sendCommand("page ac3");
+}
+
+void telaAcPage3()
+{
+    sendCommand("page ac2");
+}
+
+void telaTvPage2()
+{
+    sendCommand("page tv3");
+}
+
+void telaTvPage3()
+{
+    sendCommand("page tv2");
+}
+
+void 

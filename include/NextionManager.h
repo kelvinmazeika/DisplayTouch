@@ -25,5 +25,11 @@ void removeSalaExtraAc();
 void removeSalaExtraProj();
 void removeSalaExtraTv();
 
+void telaAcPage2();
+void telaAcPage3();
+
+void telaTvPage2();
+void telaTvPage3();
+
 
 #endif
