@@ -24,11 +24,4 @@ void publicarAC(); //Verificar JSON e terminar de preencher parametros
 void serializeTv(int comando);
 void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
 
-
-
-
-
-bool projEstadoPower = false;
-bool projEstadoFreeze = false;
-
 #endif

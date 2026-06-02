@@ -97,6 +97,27 @@ void configurarEventosNextion()
     tvPageB2.attachPop([](){ updateTela(9); });
     tvPageA3.attachPop([](){ updateTela(8); });
 
+    botaoLuz.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+    onOffLuz(9, 1, 1); });
+    botaoLuzB.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+     onOffLuz(9, 0, 1); });
+    
+    botaoLuz.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+     onOffLuz(9, 1, 1); });
+    botaoLuz.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+     onOffLuz(9, 0, 1); });
+    botaoLuz.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+     onOffLuz(10, 1, 1); });
+    botaoLuz.attachPush([](){ static bool ligado = false;
+    ligado = !ligado;
+     onOffLuz(10, 0, 1); });
+
+
     tvAOn.attachPush([]() {
     static bool ligado = false;
     ligado = !ligado;
@@ -138,6 +159,14 @@ void configurarEventosNextion()
 
     nexListen(tvPageB2);
     nexListen(tvPageA3);
+
+    nexListen(botaoLuz);
+    nexListen(botaoLuzB);
+
+    nexListen(botaoLuzA2);
+    nexListen(botaoLuzB2);
+    nexListen(botaoLuzC2);
+    nexListen(botaoLuzD2);
 }
 
 void updateTela(int modulo)
@@ -237,3 +266,15 @@ void removeSalaExtra(int modulo)
         break;
     }
 }
+
+void onOffLuz(int sala, bool frenteAtras, bool estadoLampada)
+{
+    serializeLampada(sala, frenteAtras, estadoLampada);
+}
+
+void onOffTv(int sala, bool estado)
+{
+    serializeTv(estado ? 1 : 0);
+}
+
+

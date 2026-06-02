@@ -13,11 +13,9 @@ void updateTela(int modulo);
 void addSalaExtra(int modulo);
 void removeSalaExtra(int modulo);
 
-void telaAcPage2();
-void telaAcPage3();
+void onOffLuz(int sala, bool frenteAtras, bool estadoLampada);
+void onOffTv(int sala, bool estado);
 
-void telaTvPage2();
-void telaTvPage3();
 
 
 #endif

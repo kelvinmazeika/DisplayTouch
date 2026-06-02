@@ -119,19 +119,19 @@ extern NexButton adicionarSalaExtraProj;
 extern NexButton telaRetratilUp;
 extern NexButton telaRetratilStop;
 extern NexButton telaRetratilDown;
-extern NexButton projetorAOn;
+extern NexDSButton projetorAOn;
 extern NexButton projetorAFreeze;
 
 extern NexButton removerSalaExtraProj;
 extern NexButton telaRetratilUp2;
 extern NexButton telaRetratilStop2;
 extern NexButton telaRetratilDown2;
-extern NexButton projetorAOn2;
+extern NexDSButton projetorAOn2;
 extern NexButton projetorAFreeze2;
 extern NexButton telaRetratilBUp2;
 extern NexButton telaRetratilBStop2;
 extern NexButton telaRetratilBDown2;
-extern NexButton projetorBOn2;
+extern NexDSButton projetorBOn2;
 extern NexButton projetorBFreeze2;
 
 // Tela TV (8, 9, 10)

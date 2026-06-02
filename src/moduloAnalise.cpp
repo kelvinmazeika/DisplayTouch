@@ -8,17 +8,6 @@
 #include "WiFiManager.h"
 #include "DebugManager.h"
 
-void serializeModuloAnalise(const String &mensagem);
-
-void setup()
-{
-
-}
-
-void loop()
-{
-
-}
 
 void serializeModuloAnalise(const String &mensagem)
 {
