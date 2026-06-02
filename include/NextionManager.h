@@ -8,22 +8,10 @@ void configurarNextion();
 void configurarTelaInicial();
 void configurarEventosNextion();
 
-void botaoBack();
-void telaLuz();
-void telaAr();
-void telaProj();
-void telaTv();
-void telaSens();
-void telaSettings();
+void updateTela(int modulo);
 
-void addSalaExtraLuz();
-void addSalaExtraAc();
-void addSalaExtraProj();
-void addSalaExtraTv();
-void removeSalaExtraLuz();
-void removeSalaExtraAc();
-void removeSalaExtraProj();
-void removeSalaExtraTv();
+void addSalaExtra(int modulo);
+void removeSalaExtra(int modulo);
 
 void telaAcPage2();
 void telaAcPage3();

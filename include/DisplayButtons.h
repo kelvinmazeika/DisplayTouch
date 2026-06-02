@@ -137,7 +137,7 @@ extern NexButton projetorBFreeze2;
 // Tela TV (8, 9, 10)
 
 extern NexButton adicionarSalaExtraTv;
-extern NexButton tvAOn;
+extern NexDSButton tvAOn;
 extern NexButton tvAReturn;
 extern NexButton tvAVolumeUp;
 extern NexButton tvAVolumeDown;
@@ -148,7 +148,7 @@ extern NexButton tvARight;
 extern NexButton tvASelect;
 
 extern NexButton removerSalaExtraTv;
-extern NexButton tvAOn2;
+extern NexDSButton tvAOn2;
 extern NexButton tvAReturn2;
 extern NexButton tvAVolumeUp2;
 extern NexButton tvAVolumeDown2;
@@ -160,7 +160,7 @@ extern NexButton tvASelect2;
 extern NexButton tvPageB2;
 
 extern NexButton removerSalaExtraTv2;
-extern NexButton tvBOn3;
+extern NexDSButton tvBOn3;
 extern NexButton tvBReturn3;
 extern NexButton tvBVolumeUp3;
 extern NexButton tvBVolumeDown3;

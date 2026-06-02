@@ -26,12 +26,9 @@ const int8_t PINO_TX_NEXTION = 17;
 // Buffer usado para montar textos antes de enviar ao display
 char texto[50];
 
-
-
 // =========================================================
 // PROTÓTIPOS DAS FUNÇÕES
 // =========================================================
-
 
 void configurarNextion()
 {
@@ -62,44 +59,48 @@ void configurarTelaInicial()
 
 void configurarEventosNextion()
 {
-    botaoBackLuz1.attachPop(botaoBack);
-    botaoBackLuz2.attachPop(botaoBack);
-    botaoBackAc1.attachPop(botaoBack);
-    botaoBackAc2.attachPop(botaoBack);
-    botaoBackAc3.attachPop(botaoBack);
-    botaoBackProj1.attachPop(botaoBack);
-    botaoBackProj2.attachPop(botaoBack);
-    botaoBackTv1.attachPop(botaoBack);
-    botaoBackTv2.attachPop(botaoBack);
-    botaoBackTv3.attachPop(botaoBack);
-    
-    botaoLuz.attachPop(telaLuz);
-    botaoAr.attachPop(telaAr);
-    botaoProj.attachPop(telaProj);
-    botaoTv.attachPop(telaTv);
-    botaoSens.attachPop(telaSens);
-    botaoSettings.attachPop(telaSettings);
+    botaoBackLuz1.attachPop([](){ updateTela(10); }); // "LAMBDA", muito maneiro vale a pena pesquisar sobre isso
+    botaoBackLuz2.attachPop([](){ updateTela(10); });
+    botaoBackAc1.attachPop([](){ updateTela(10); });
+    botaoBackAc2.attachPop([](){ updateTela(10); });
+    botaoBackAc3.attachPop([](){ updateTela(10); });
+    botaoBackProj1.attachPop([](){ updateTela(10); });
+    botaoBackProj2.attachPop([](){ updateTela(10); });
+    botaoBackTv1.attachPop([](){ updateTela(10); });
+    botaoBackTv2.attachPop([](){ updateTela(10); });
+    botaoBackTv3.attachPop([](){ updateTela(10); });
 
-    adicionarSalaExtraAc.attachPop(addSalaExtraAc);
-    adicionarSalaExtraLuz.attachPop(addSalaExtraLuz);
-    adicionarSalaExtraProj.attachPop(addSalaExtraProj);
-    adicionarSalaExtraTv.attachPop(addSalaExtraTv);
+    botaoLuz.attachPop([](){ updateTela(0); });
+    botaoAr.attachPop([](){ updateTela(1); });
+    botaoProj.attachPop([](){ updateTela(2); });
+    botaoTv.attachPop([](){ updateTela(3); });
+    botaoSens.attachPop([](){ updateTela(4); });
+    botaoSettings.attachPop([](){ updateTela(5); });
 
-    removerSalaExtraLuz.attachPop(removeSalaExtraLuz);
-    removerSalaExtraAc.attachPop(removeSalaExtraAc);
-    removerSalaExtraAc3.attachPop(removeSalaExtraAc);
-    removerSalaExtraProj.attachPop(removeSalaExtraProj);
-    removerSalaExtraTv.attachPop(removeSalaExtraTv);
-    removerSalaExtraTv2.attachPop(removeSalaExtraTv);
+    adicionarSalaExtraLuz.attachPop([](){ addSalaExtra(0); });
+    adicionarSalaExtraAc.attachPop([](){ addSalaExtra(1); });
+    adicionarSalaExtraProj.attachPop([](){ addSalaExtra(2); });
+    adicionarSalaExtraTv.attachPop([](){ addSalaExtra(3); });
+
+    removerSalaExtraLuz.attachPop([](){ removeSalaExtra(0); });
+    removerSalaExtraAc.attachPop([](){ removeSalaExtra(1); });
+    removerSalaExtraAc3.attachPop([](){ removeSalaExtra(1); });
+    removerSalaExtraProj.attachPop([](){ removeSalaExtra(2); });
+    removerSalaExtraTv.attachPop([](){ removeSalaExtra(3); });
+    removerSalaExtraTv2.attachPop([](){ removeSalaExtra(3); });
 
     // Tela Sala Extra AC
-    pageAc2.attachPop(telaAcPage2);
-    pageAc3.attachPop(telaAcPage3);
-    
-    // Tela Sala Extra TV
-    tvPageB2.attachPop(telaTvPage2);
-    tvPageA3.attachPop(telaTvPage3);
+    pageAc2.attachPop([](){ updateTela(7); });
+    pageAc3.attachPop([](){ updateTela(6); });
 
+    // Tela Sala Extra TV
+    tvPageB2.attachPop([](){ updateTela(9); });
+    tvPageA3.attachPop([](){ updateTela(8); });
+
+    tvAOn.attachPush([]() {
+    static bool ligado = false;
+    ligado = !ligado;
+    serializeTv(ligado ? 1 : 0);});
 
 
     nexListen(botaoBackLuz1);
@@ -139,124 +140,100 @@ void configurarEventosNextion()
     nexListen(tvPageA3);
 }
 
-void botaoBack()
+void updateTela(int modulo)
 {
-    Serial.println("Botao back pressionado");
-    sendCommand("page inicial");
+    switch (modulo)
+    {
+    case 0:
+        if (luzSalaExtra)
+            sendCommand("page luz2");
+        else
+            sendCommand("page luz1");
+        break;
+    case 1:
+        if (arSalaExtra)
+            sendCommand("page ac2");
+        else
+            sendCommand("page ac1");
+        break;
+    case 2:
+        if (projSalaExtra)
+            sendCommand("page proj2");
+        else
+            sendCommand("page proj1");
+        break;
+    case 3:
+        if (tvSalaExtra)
+            sendCommand("page tv2");
+        else
+            sendCommand("page tv1");
+        break;
+    case 4:
+        sendCommand("page sens");
+        break;
+    case 5:
+        sendCommand("page settings");
+        break;
+    case 6:
+        sendCommand("page ac2");
+        break;
+    case 7:
+        sendCommand("page ac3");
+        break;
+    case 8:
+        sendCommand("page tv2");
+        break;
+    case 9:
+        sendCommand("page tv3");
+        break;
+    case 10:
+        sendCommand("page inicial");
+        break;
+    }
 }
 
-void telaLuz()
+void addSalaExtra(int modulo)
 {
-    Serial.println("Botao luz pressionado");
-    if(luzSalaExtra)
-    sendCommand("page luz2");
-    else
-    sendCommand("page luz1");
+    switch (modulo)
+    {
+    case 0:
+        luzSalaExtra = 1;
+        updateTela(0);
+        break;
+    case 1:
+        arSalaExtra = 1;
+        updateTela(1);
+        break;
+    case 2:
+        projSalaExtra = 1;
+        updateTela(2);
+        break;
+    case 3:
+        tvSalaExtra = 1;
+        updateTela(3);
+        break;
+    }
 }
 
-void telaAr()
+void removeSalaExtra(int modulo)
 {
-    if(arSalaExtra)
-    sendCommand("page ac2");
-    else
-    sendCommand("page ac1");
+    switch (modulo)
+    {
+    case 0:
+        luzSalaExtra = 0;
+        updateTela(0);
+        break;
+    case 1:
+        arSalaExtra = 0;
+        updateTela(1);
+        break;
+    case 2:
+        projSalaExtra = 0;
+        updateTela(2);
+        break;
+    case 3:
+        tvSalaExtra = 0;
+        updateTela(3);
+        break;
+    }
 }
-
-void telaProj()
-{
-    if(projSalaExtra)
-    sendCommand("page proj2");
-    else
-    sendCommand("page proj1");
-}
-
-void telaTv()
-{
-    if(tvSalaExtra)
-    sendCommand("page tv2");
-    else
-    sendCommand("page tv1");
-}
-
-void telaSens()
-{
-    sendCommand("page sens");
-}
-
-void telaSettings()
-{
-    sendCommand("page settings");
-}
-
-void addSalaExtraLuz()
-{
-    luzSalaExtra = 1;
-    telaLuz();
-}
-
-void addSalaExtraAc()
-{
-    arSalaExtra = 1;
-    telaAr();
-}
-
-void addSalaExtraProj()
-{
-    projSalaExtra = 1;
-    telaProj();
-}
-
-void addSalaExtraTv()
-{
-    tvSalaExtra = 1;
-    telaTv();
-}
-
-void removeSalaExtraLuz()
-{
-    luzSalaExtra = 0;
-    telaLuz();
-}
-
-void removeSalaExtraAc()
-{
-    arSalaExtra = 0;
-    telaAr();
-}
-
-void removeSalaExtraProj()
-{
-    projSalaExtra = 0;
-    telaProj();
-}
-
-void removeSalaExtraTv()
-{
-    tvSalaExtra = 0;
-    telaTv();
-}
-<<<<<<< HEAD
-=======
-
-void telaAcPage2()
-{
-    sendCommand("page ac3");
-}
-
-void telaAcPage3()
-{
-    sendCommand("page ac2");
-}
-
-void telaTvPage2()
-{
-    sendCommand("page tv3");
-}
-
-void telaTvPage3()
-{
-    sendCommand("page tv2");
-}
-
-void 
->>>>>>> 1859c850e311a0a8d99744e0c6f06a27003379a9

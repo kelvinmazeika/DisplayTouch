@@ -9,11 +9,11 @@ void serializarAc()
 
 }
 
-void serializeTv(int acao)
+void serializeTv(int comando)
 {
     String mensagem; 
     JsonDocument doc;
-    doc["televisao"] = acao;
+    doc["televisao"] = comando;
     serializeJson(doc, mensagem);
     publishMessage(TOPICO_TV_A, mensagem.c_str());
     Serial.printf("\n%s\n", mensagem);
