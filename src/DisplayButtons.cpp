@@ -122,25 +122,25 @@ NexButton adicionarSalaExtraProj(6, 3, "b1");
 NexButton telaRetratilUp(6, 4, "b2");
 NexButton telaRetratilStop(6, 5, "b3");
 NexButton telaRetratilDown(6, 6, "b4");
-NexDSButton projetorAOn(6, 7, "b5");
+NexButton projetorAOn(6, 7, "b5");
 NexButton projetorAFreeze(6, 8, "b6");
 
 NexButton removerSalaExtraProj(7, 3, "b1");
 NexButton telaRetratilUp2(7, 4, "b2");
 NexButton telaRetratilStop2(7, 5, "b3");
 NexButton telaRetratilDown2(7, 6, "b4");
-NexDSButton projetorAOn2(7, 7, "b5");
+NexButton projetorAOn2(7, 7, "b5");
 NexButton projetorAFreeze2(7, 8, "b6");
 NexButton telaRetratilBUp2(7, 9, "b7");
 NexButton telaRetratilBStop2(7, 10, "b8");
 NexButton telaRetratilBDown2(7, 11, "b9");
-NexDSButton projetorBOn2(7, 12, "b10");
+NexButton projetorBOn2(7, 12, "b10");
 NexButton projetorBFreeze2(7, 13, "b11");
 
 // Tela TV (8, 9, 10)
 
 NexButton adicionarSalaExtraTv(8, 3, "b1");
-NexDSButton tvAOn(8, 4, "b2");
+NexButton tvAOn(8, 4, "b2");
 NexButton tvAReturn(8, 5, "b3");
 NexButton tvAVolumeUp(8, 6, "b4");
 NexButton tvAVolumeDown(8, 7, "b5");
@@ -151,7 +151,7 @@ NexButton tvARight(8, 11, "b9");
 NexButton tvASelect(8, 12, "b10");
 
 NexButton removerSalaExtraTv(9, 3, "b1");
-NexDSButton tvAOn2(9, 4, "b2");
+NexButton tvAOn2(9, 4, "b2");
 NexButton tvAReturn2(9, 5, "b3");
 NexButton tvAVolumeUp2(9, 6, "b4");
 NexButton tvAVolumeDown2(9, 7, "b5");
@@ -163,7 +163,7 @@ NexButton tvASelect2(9, 12, "b10");
 NexButton tvPageB2(9, 13, "b11");
 
 NexButton removerSalaExtraTv2(10, 3, "b1");
-NexDSButton tvBOn3(10, 4, "b2");
+NexButton tvBOn3(10, 4, "b2");
 NexButton tvBReturn3(10, 5, "b3");
 NexButton tvBVolumeUp3(10, 6, "b4");
 NexButton tvBVolumeDown3(10, 7, "b5");

@@ -15,8 +15,9 @@ void serializeTv(int comando)
     JsonDocument doc;
     doc["televisao"]["comando"] = comando;
     serializeJson(doc, mensagemTv);
-    publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
+    //publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
     Serial.printf("\n%s\n", mensagemTv);
+    Serial.println("Mensagem TV publicada");
 }
 
 void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
@@ -38,6 +39,7 @@ void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
     }
 
     serializeJson(doc, mensagemLuz);
+    Serial.printf("\n%s\n", mensagemLuz);
     debugInfo(mensagemLuz);
-    publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+    //publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
 }

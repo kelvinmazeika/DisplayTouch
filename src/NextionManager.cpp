@@ -14,6 +14,8 @@ bool projSalaExtra = 0;
 bool tvSalaExtra = 0;
 uint8_t acaoTv;
 
+bool estadoLuzes[2][2] = {{0, 0}, {0, 0}}; // estadoLuzes[sala][frenteAtras]
+
 // Velocidade padrão de comunicação serial do Nextion
 const uint32_t BAUD_NEXTION = 9600;
 
@@ -97,31 +99,28 @@ void configurarEventosNextion()
     tvPageB2.attachPop([](){ updateTela(9); });
     tvPageA3.attachPop([](){ updateTela(8); });
 
-    botaoLuz.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-    onOffLuz(9, 1, 1); });
-    botaoLuzB.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-     onOffLuz(9, 0, 1); });
+    botaoLuzA.attachPop([](){
+    estadoLuzes[0][1] = !estadoLuzes[0][1];
+    onOffLuz(9, 1, estadoLuzes[0][1]); });
+    botaoLuzB.attachPop([](){
+    estadoLuzes[0][0] = !estadoLuzes[0][0];
+     onOffLuz(9, 0, estadoLuzes[0][0]); });
     
-    botaoLuz.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-     onOffLuz(9, 1, 1); });
-    botaoLuz.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-     onOffLuz(9, 0, 1); });
-    botaoLuz.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-     onOffLuz(10, 1, 1); });
-    botaoLuz.attachPush([](){ static bool ligado = false;
-    ligado = !ligado;
-     onOffLuz(10, 0, 1); });
+    botaoLuzA2.attachPop([](){ 
+    estadoLuzes[0][1] = !estadoLuzes[0][1];
+     onOffLuz(9, 1, estadoLuzes[0][1]); });
+    botaoLuzB2.attachPop([](){
+    estadoLuzes[0][0] = !estadoLuzes[0][0];
+     onOffLuz(9, 0, estadoLuzes[0][0]); });
+    botaoLuzC2.attachPop([](){
+    estadoLuzes[1][0] = !estadoLuzes[1][0];
+     onOffLuz(10, 1, estadoLuzes[1][0]); });
+    botaoLuzD2.attachPop([](){ 
+    estadoLuzes[1][1] = !estadoLuzes[1][1];
+     onOffLuz(10, 0, estadoLuzes[1][1]); });
 
 
-    tvAOn.attachPush([]() {
-    static bool ligado = false;
-    ligado = !ligado;
-    serializeTv(ligado ? 1 : 0);});
+    tvAOn.attachPop([]() { serializeTv(1);});
 
 
     nexListen(botaoBackLuz1);
@@ -160,7 +159,7 @@ void configurarEventosNextion()
     nexListen(tvPageB2);
     nexListen(tvPageA3);
 
-    nexListen(botaoLuz);
+    nexListen(botaoLuzA);
     nexListen(botaoLuzB);
 
     nexListen(botaoLuzA2);
