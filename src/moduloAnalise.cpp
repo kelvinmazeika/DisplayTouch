@@ -9,7 +9,7 @@
 #include "DebugManager.h"
 
 
-void serializeModuloAnalise(const String &mensagem)
+void deserializeModuloAnalise(const String &mensagem)
 {
  JsonDocument doc; 
  DeserializationError erro = deserializeJson(doc, mensagem);
@@ -22,7 +22,7 @@ void serializeModuloAnalise(const String &mensagem)
 
  if(doc["analise"].is<JsonVariant>())
  {
-  if(!doc["analise"]["timestamp"].as<u_long>() || !doc["analise"]["temperatura"].as<float>() || !doc["analise"]["umidade"].as<float>() || doc["analise"]["ruido"].as<float>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["alertaSom"].as<int>() || doc["analise"]["eco"].as<float>())
+  if(!doc["analise"]["timestamp"].as<u_long>() || !doc["analise"]["temperatura"].as<float>() || !doc["analise"]["umidade"].as<float>() || doc["analise"]["ruido"].as<float>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["alertaSom"].as<int>() || doc["analise"]["eco"].as<bool>())
     {
      debugError("Json invalido");
      return;
@@ -37,7 +37,7 @@ void serializeModuloAnalise(const String &mensagem)
   float ruido = doc["analise"]["ruido"].as<float>();
   int comandoAr = doc["analise"]["comandoAr"].as<int>();
   int alerta = doc["analise"]["alertaSom"].as<int>();
-  float eco = doc["analise"]["eco"].as<float>();
+  bool eco = doc["analise"]["eco"].as<bool>();
  }
 }
 
