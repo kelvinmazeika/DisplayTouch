@@ -2,24 +2,25 @@
 #define SERIALIZE_H
 
 #include <Arduino.h>
-#include <MqttManager.h>
+#include <ezTime.h>
+#include "MqttManager.h"
+
+Timezone tempo;
 
 #define TOPICO_ANALISE 0
 #define TOPICO_TV 1
 #define TOPICO_PROJ_09 2
 #define TOPICO_PROJ_10 3
-#define TOPICO_AC_09 4
-#define TOPICO_AC_10 5 
-#define TOPICO_LAMP 6 
-#define TOPICO_TELA_09 7
-#define TOPICO_TELA_10 8
+#define TOPICO_AC 4
+#define TOPICO_LAMP 5 
+#define TOPICO_TELA_09 6
+#define TOPICO_TELA_10 7
  
 
-void voltarHome();
+void iniciaTimestamp();
 
 void publicarComandProjetorTela(const char *sala, bool comando);
-void publicarTV(int acao);
-void publicarAC(); //Verificar JSON e terminar de preencher parametros
+void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento); //Verificar JSON e terminar de preencher parametros
 
 void serializeTv(int comando);
 void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
