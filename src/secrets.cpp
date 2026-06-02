@@ -35,6 +35,7 @@ const char MQTT_CERTIFICADO_CA[] PROGMEM = R"EOF()EOF";
 //============================
 // TOPICOS
 //============================
+//! "senai134/shared/projeto/..." - formato do topico
 
 const char* TOPICOS_PUBLICAR[] = 
 {

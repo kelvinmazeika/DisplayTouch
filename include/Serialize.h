@@ -19,11 +19,10 @@ void voltarHome();
 
 void publicarComandProjetorTela(const char *sala, bool comando);
 void publicarTV(int acao);
-void serializarLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
 void publicarAC(); //Verificar JSON e terminar de preencher parametros
 
-
 void serializeTv(int comando);
+void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
 
 
 
