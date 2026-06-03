@@ -5,21 +5,17 @@
 #include "DisplayButtons.h"
 #include <ezTime.h>
 
-
-
 String mensagemTv;
 String mensagemLuz;
 String mensagemProj;
 String mensagemTela;
 String mensagemAC;
 
-
 void iniciaTimestamp()
 {
     setInterval(3600);
     waitForSync();
     tempo.setLocation("America/Sao_Paulo");
-
 }
 
 void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento)
@@ -33,7 +29,7 @@ void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vent
     doc["ar-condicionado"]["vento"] = vento;
     doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemAC);
-    //publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
+    // publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
     debugInfo(mensagemAC);
 }
 
@@ -43,7 +39,7 @@ void serializeTv(int comando)
     doc["televisao"]["comando"] = comando;
     doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemTv);
-    //publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
+    // publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
     Serial.printf("\n%s\n", mensagemTv);
     Serial.println("Mensagem TV publicada");
 }
@@ -62,8 +58,8 @@ void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
         {
             doc["lampadaSala09"]["interruptor2"] = estadoLampada;
             doc["timestamp"] = tempo.now();
+        }
     }
-}
     else if (sala == 10)
     {
         if (frenteAtras)
@@ -75,11 +71,31 @@ void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
         {
             doc["lampadaSala10"]["interruptor4"] = estadoLampada;
             doc["timestamp"] = tempo.now();
+        }
     }
-}
 
     serializeJson(doc, mensagemLuz);
     Serial.printf("\n%s\n", mensagemLuz);
     debugInfo(mensagemLuz);
-    //publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+    // publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+}
+
+void onOffTodasLuzes(bool estadoLuzes)
+{
+    JsonDocument doc;
+
+    doc["lampadaSala09"]["interruptor1"] = estadoLuzes;
+    doc["timestamp"] = tempo.now();
+
+    doc["lampadaSala09"]["interruptor2"] = estadoLuzes;
+    doc["timestamp"] = tempo.now();
+
+    doc["lampadaSala10"]["interruptor3"] = estadoLuzes;
+    doc["timestamp"] = tempo.now();
+
+    doc["lampadaSala10"]["interruptor4"] = estadoLuzes;
+    doc["timestamp"] = tempo.now();
+
+    serializeJson(doc, mensagemLuz);
+    Serial.printf("\n%s\n", mensagemLuz);
 }
