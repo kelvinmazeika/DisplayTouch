@@ -337,3 +337,8 @@ void deserializeModuloAnalise(const String &mensagem)
  }
 }
 
+void onOffLuz(int sala, bool frenteAtras, bool estadoLampada)
+{
+    serializeLampada(sala, frenteAtras, estadoLampada);
+}
+

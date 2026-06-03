@@ -1,7 +1,8 @@
-#include <Serialize.h>
+#include "Serialize.h"
 #include <ArduinoJson.h>
-#include <MqttManager.h>
-#include <DebugManager.h>
+#include "MqttManager.h"
+#include "DebugManager.h"
+#include "DisplayButtons.h"
 #include <ezTime.h>
 
 
@@ -32,7 +33,7 @@ void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vent
     doc["ar-condicionado"]["vento"] = vento;
     doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemAC);
-    publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
+    //publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
     debugInfo(mensagemAC);
 }
 
