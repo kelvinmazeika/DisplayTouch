@@ -2,6 +2,8 @@
 #include <Nextion.h>
 #include <DisplayButtons.h>
 
+Timezone tempo;
+
 NexButton botaoBackLuz1(1, 4, "b0");
 NexButton botaoBackLuz2(2, 8, "b0");
 NexButton botaoBackAc1(3, 2, "b0");

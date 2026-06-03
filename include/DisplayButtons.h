@@ -2,6 +2,9 @@
 #define DISPLAYBUTTONS_H
 #include <Nextion.h>
 #include <Arduino.h>
+#include <ezTime.h>
+
+extern Timezone tempo;
 
 extern NexButton botaoBackLuz1;
 extern NexButton botaoBackLuz2;

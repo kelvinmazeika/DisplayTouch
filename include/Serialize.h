@@ -5,7 +5,6 @@
 #include <ezTime.h>
 #include "MqttManager.h"
 
-Timezone tempo;
 
 #define TOPICO_ANALISE 0
 #define TOPICO_TV 1

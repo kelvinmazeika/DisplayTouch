@@ -2,6 +2,7 @@
 #include <ArduinoJson.h>
 #include "MqttManager.h"
 #include "DebugManager.h"
+#include "DisplayButtons.h"
 #include <ezTime.h>
 
 
