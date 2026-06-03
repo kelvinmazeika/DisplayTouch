@@ -18,7 +18,9 @@
 
 void iniciaTimestamp();
 
-void publicarComandProjetorTela(const char *sala, bool comando);
+void publicarComandProjetor(const char *sala, bool power, bool congelamento);
+bool projEstadoPower = 0;
+bool projEstadoFreeze = 0;
 void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento); //Verificar JSON e terminar de preencher parametros
 
 void serializeTv(int comando);

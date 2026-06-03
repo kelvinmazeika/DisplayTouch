@@ -83,3 +83,21 @@ void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
     debugInfo(mensagemLuz);
     //publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
 }
+
+void publicarComandoProjetor(const char *sala, bool power, bool congelamento)
+{
+    JsonDocument doc;
+
+    JsonObject projetor = doc.createNestedObject("projetor");
+    projetor["estadoPower"] = projEstadoPower;
+    projetor["estadoCongelamento"] = projEstadoFreeze;
+
+    String mensagem;
+    serializeJson(doc, mensagem);
+    publicarMensagemNoTopico(TOPICO_PROJ_09, mensagem.c_str());
+}
+
+void enviarProjetor()
+{
+    publicarComandoProjetor("estadoPower", projEstadoPower, projEstadoFreeze);
+}
