@@ -171,5 +171,10 @@ extern NexButton tvBRight3;
 extern NexButton tvBSelect3;
 extern NexButton tvPageA3;
 
+extern NexText textTempAnalise;
+extern NexText textUmidAnalise;
+extern NexText textRuidoAnalise;
+extern NexText textAlertaRuido;
+
 
 #endif

@@ -9,18 +9,22 @@
 #include "NextionManager.h"
 #include "Serialize.h"
 
+void tratarMensagemRecebida(const char *topico, const String &mensagem);
+
 void setup()
 {
   configDebug();
-  
-    configurarNextion();
-    configurarTelaInicial();
-    configurarEventosNextion();
-    iniciaTimestamp();
+
+  connectToWifi();
+  configureMQTT();
+  registerCallbackMessage(tratarMensagemRecebida);
+  connectToMQTT();
+
+  configurarNextion();
+  configurarTelaInicial();
+  configurarEventosNextion();
+  iniciaTimestamp();
   delay(1000);
-  
-
-
 
   Serial.println();
   Serial.println("Iniciando exemplo com ESP32-S3 e Nextion...");
@@ -32,4 +36,29 @@ void loop()
 {
   nexLoop();
   events();
+}
+
+void tratarMensagemRecebida(const char* topico, const String& mensagem)
+{
+  debugInfo("==============================");
+  debugInfo("Mensagem recebida na aplicação");
+  debugInfo("==============================");
+  
+  if(topico == nullptr)
+  {
+    debugError("Tópico MQTT inválido");
+    return;
+  }
+  
+  debugInfo("Tópico: " + String(topico));
+  debugInfo("Mensagem: " + mensagem);
+
+  if(strcmp(topico, TOPICO_ANALISE) == 0)
+  {
+    deserializeModuloAnalise(mensagem);
+    return;
+  }
+
+  debugError("Tópico não tratado: " + String(topico));
+
 }

@@ -140,7 +140,7 @@ NexButton projetorBFreeze2(7, 13, "b11");
 // Tela TV (8, 9, 10)
 
 NexButton adicionarSalaExtraTv(8, 3, "b1");
-NexButton tvAOn(8, 4, "b2");
+NexDSButton tvAOn(8, 12, "bt0");
 NexButton tvAReturn(8, 5, "b3");
 NexButton tvAVolumeUp(8, 6, "b4");
 NexButton tvAVolumeDown(8, 7, "b5");
@@ -151,7 +151,7 @@ NexButton tvARight(8, 11, "b9");
 NexButton tvASelect(8, 12, "b10");
 
 NexButton removerSalaExtraTv(9, 3, "b1");
-NexButton tvAOn2(9, 4, "b2");
+NexDSButton tvAOn2(9, 13, "bt0");
 NexButton tvAReturn2(9, 5, "b3");
 NexButton tvAVolumeUp2(9, 6, "b4");
 NexButton tvAVolumeDown2(9, 7, "b5");
@@ -163,7 +163,7 @@ NexButton tvASelect2(9, 12, "b10");
 NexButton tvPageB2(9, 13, "b11");
 
 NexButton removerSalaExtraTv2(10, 3, "b1");
-NexButton tvBOn3(10, 4, "b2");
+NexDSButton tvBOn3(10, 13, "bt0");
 NexButton tvBReturn3(10, 5, "b3");
 NexButton tvBVolumeUp3(10, 6, "b4");
 NexButton tvBVolumeDown3(10, 7, "b5");
@@ -173,3 +173,8 @@ NexButton tvBLeft3(10, 10, "b8");
 NexButton tvBRight3(10, 11, "b9");
 NexButton tvBSelect3(10, 12, "b10");
 NexButton tvPageA3(10, 13, "b11");
+
+NexText textTempAnalise(12, 2, "t0");
+NexText textUmidAnalise(12, 3, "t1");
+NexText textRuidoAnalise(12, 4, "t2");
+NexText textAlertaRuido(12, 5, "t3");

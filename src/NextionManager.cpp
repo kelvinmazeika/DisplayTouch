@@ -3,6 +3,8 @@
 #include "DisplayButtons.h"
 #include "NextionManager.h"
 #include "Serialize.h"
+#include <ArduinoJson.h>
+#include <DebugManager.h>
 
 // =========================================================
 // CONFIGURAÇÃO DA COMUNICAÇÃO COM O NEXTION
@@ -14,7 +16,17 @@ bool projSalaExtra = 0;
 bool tvSalaExtra = 0;
 uint8_t acaoTv;
 
-bool estadoLuzes[2][2] = {{0, 0}, {0, 0}}; // estadoLuzes[sala][frenteAtras]
+bool estadoLuzes[2][2] = {{0, 0}, {0, 0}};
+bool estadoTv[2] = {0, 0};
+
+float temperatura;
+float umidade;
+float ruido;
+int comandoAr;
+int alerta;
+bool eco;
+u_long timeStampAnalise;
+char buffer[100];
 
 // Velocidade padrão de comunicação serial do Nextion
 const uint32_t BAUD_NEXTION = 9600;
@@ -120,7 +132,19 @@ void configurarEventosNextion()
      onOffLuz(10, 0, estadoLuzes[1][1]); });
 
 
-    tvAOn.attachPop([]() { serializeTv(1);});
+    tvAOn.attachPop([]() { 
+        estadoTv[0] = !estadoTv[0];
+        serializeTv(estadoTv[0]);
+    });
+    tvAOn2.attachPop([]() { 
+        estadoTv[0] = !estadoTv[0];
+        serializeTv(estadoTv[0]);
+    });
+    tvBOn3.attachPop([]() { 
+        estadoTv[1] = !estadoTv[1];
+        serializeTv(estadoTv[1]);
+    });
+    
 
 
     nexListen(botaoBackLuz1);
@@ -266,14 +290,50 @@ void removeSalaExtra(int modulo)
     }
 }
 
-void onOffLuz(int sala, bool frenteAtras, bool estadoLampada)
+void deserializeModuloAnalise(const String &mensagem)
 {
-    serializeLampada(sala, frenteAtras, estadoLampada);
-}
+ JsonDocument doc; 
+ DeserializationError erro = deserializeJson(doc, mensagem);
+ 
+ if(erro)
+ {
+    debugError("Json inválido, corrigir formatação");
+    return;
+ }
 
-void onOffTv(int sala, bool estado)
-{
-    serializeTv(estado ? 1 : 0);
-}
+ if(doc["analise"].is<JsonVariant>())
+ {
+  if(!doc["analise"]["timestamp"].as<u_long>() || !doc["analise"]["temperatura"].as<float>() || !doc["analise"]["umidade"].as<float>() || doc["analise"]["ruido"].as<float>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["alertaSom"].as<int>() || doc["analise"]["eco"].as<bool>())
+    {
+     debugError("Json invalido");
+     return;
+    }
+  
+ }
+ else
+ {
+  timeStampAnalise = doc["analise"]["timestamp"].as<u_long>();
+  temperatura = doc["analise"]["temperatura"].as<float>();
+  umidade = doc["analise"]["umidade"].as<float>();
+  ruido = doc["analise"]["ruido"].as<float>();
+  comandoAr = doc["analise"]["comandoAr"].as<int>();
+  alerta = doc["analise"]["alertaSom"].as<int>();
+  eco = doc["analise"]["eco"].as<bool>();
 
+    debugInfo("Analise desserializada com sucesso:");
+    debugInfo("Timestamp: " + String(timeStampAnalise));
+
+    sprintf(buffer, "%.1f", temperatura);
+    textTempAnalise.setText(buffer);
+
+    sprintf(buffer, "%.1f", umidade);
+    textUmidAnalise.setText(buffer);
+
+    sprintf(buffer, "%.1f", ruido);
+    textRuidoAnalise.setText(buffer);
+
+    sprintf(buffer, "%s", alerta ? "Alerta!" : "Normal");
+    textAlertaRuido.setText(buffer);
+ }
+}
 
