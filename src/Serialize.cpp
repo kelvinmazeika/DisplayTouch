@@ -16,7 +16,12 @@ void iniciaTimestamp()
     setInterval(3600);
     waitForSync();
     tempo.setLocation("America/Sao_Paulo");
+<<<<<<< HEAD
+
+} 
+=======
 }
+>>>>>>> b4e54fc8bcc0a2548d92ee53624455ea75f09486
 
 void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento)
 {
@@ -100,6 +105,7 @@ void onOffTodasLuzes(bool estadoLuzes)
     Serial.printf("\n%s\n", mensagemLuz);
 }
 
+<<<<<<< HEAD
 void publicarComandoProjetor(const char *sala, bool power, bool congelamento)
 {
     JsonDocument doc;
@@ -117,3 +123,25 @@ void enviarProjetor()
 {
     publicarComandoProjetor("estadoPower", projEstadoPower, projEstadoFreeze);
 }
+=======
+
+
+
+void serializeTelaRetratil(int tela, bool up, bool down, bool pause)
+{
+
+    JsonDocument doc;
+
+    doc["telaRetratil"]["tela"] = tela;
+    doc["telaRetratil"]["UP"] = up;
+    doc["telaRetratil"]["PAUSE"] = pause;
+    doc["telaRetratil"]["DOWN"] = down;
+    doc["telaRetratil"]["timestamp"] = tempo.now();
+    doc["telaRetratil"]["tempo"] = tempo.dateTime();
+
+    serializeJson(doc, mensagemTela);
+    publicarMensagemNoTopico(0, mensagemTela.c_str());
+    Serial.println(mensagemTela);
+   // conectividade.publicar(0, texto.c_str());
+}
+>>>>>>> f9f48fcc6155b019c998a1316f98c1704d4d0ce6

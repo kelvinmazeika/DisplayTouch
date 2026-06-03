@@ -18,6 +18,7 @@ uint8_t acaoTv;
 
 bool estadoLuzes[2][2] = {{0, 0}, {0, 0}};
 bool estadoTv[2] = {0, 0};
+int tela = 0;
 
 float temperatura;
 float umidade;
@@ -145,6 +146,44 @@ void configurarEventosNextion()
         serializeTv(estadoTv[1]);
     });
     
+    telaRetratilUp.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 1, 0 , 0);
+    });
+    telaRetratilDown.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 0, 1 , 0);
+    });
+    telaRetratilStop.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 0, 0 , 1);
+    });
+
+    telaRetratilUp2.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 1, 0 , 0);
+    });
+    telaRetratilDown2.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 0, 1 , 0);
+    });
+    telaRetratilStop2.attachPop([]() {
+        tela = 0;
+        serializeTelaRetratil(tela, 0, 0 , 1);
+    });
+    
+    telaRetratilBUp2.attachPop([]() {
+        tela = 1;
+        serializeTelaRetratil(tela, 1, 0 , 0);
+    });
+    telaRetratilBDown2.attachPop([]() {
+        tela = 1;
+        serializeTelaRetratil(tela, 0, 1 , 0);
+    });
+    telaRetratilBStop2.attachPop([]() {
+        tela = 1;
+        serializeTelaRetratil(tela, 0, 0 , 1);
+    });
 
 
     nexListen(botaoBackLuz1);
@@ -190,6 +229,18 @@ void configurarEventosNextion()
     nexListen(botaoLuzB2);
     nexListen(botaoLuzC2);
     nexListen(botaoLuzD2);
+
+    nexListen(telaRetratilUp);
+    nexListen(telaRetratilDown);
+    nexListen(telaRetratilStop);
+
+    nexListen(telaRetratilUp2);
+    nexListen(telaRetratilDown2);
+    nexListen(telaRetratilStop2);
+
+    nexListen(telaRetratilBUp2);
+    nexListen(telaRetratilBDown2);
+    nexListen(telaRetratilBStop2);
 }
 
 void updateTela(int modulo)
