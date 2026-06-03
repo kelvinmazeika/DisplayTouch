@@ -34,6 +34,8 @@ void setup()
 
 void loop()
 {
+  grantMQTTConnection();
+  grantWiFiAccess();
   nexLoop();
   events();
 }
