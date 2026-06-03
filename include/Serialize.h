@@ -26,4 +26,7 @@ void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vent
 void serializeTv(int comando);
 void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
 
+void onOffTodasLuzes(bool estadoLuzes);
+
+
 #endif
