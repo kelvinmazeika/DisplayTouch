@@ -25,4 +25,7 @@ void serializeTv(int comando);
 void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
 void serializeTelaRetratil(int tela, bool up, bool down, bool pause);
 
+void onOffTodasLuzes(bool estadoLuzes);
+
+
 #endif
