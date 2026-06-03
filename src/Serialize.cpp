@@ -20,7 +20,7 @@ void iniciaTimestamp()
     waitForSync();
     tempo.setLocation("America/Sao_Paulo");
 
-}
+} 
 
 void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento)
 {
@@ -82,4 +82,25 @@ void serializeLampada(int sala, bool frenteAtras, bool estadoLampada)
     Serial.printf("\n%s\n", mensagemLuz);
     debugInfo(mensagemLuz);
     //publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+}
+
+
+
+
+void serializeTelaRetratil(int tela, bool up, bool down, bool pause)
+{
+
+    JsonDocument doc;
+
+    doc["telaRetratil"]["tela"] = tela;
+    doc["telaRetratil"]["UP"] = up;
+    doc["telaRetratil"]["PAUSE"] = pause;
+    doc["telaRetratil"]["DOWN"] = down;
+    doc["telaRetratil"]["timestamp"] = tempo.now();
+    doc["telaRetratil"]["tempo"] = tempo.dateTime();
+
+    serializeJson(doc, mensagemTela);
+    publicarMensagemNoTopico(0, mensagemTela.c_str());
+    Serial.println(mensagemTela);
+   // conectividade.publicar(0, texto.c_str());
 }

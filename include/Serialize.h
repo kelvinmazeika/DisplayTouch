@@ -12,8 +12,8 @@
 #define TOPICO_PROJ_10 3
 #define TOPICO_AC 4
 #define TOPICO_LAMP 5 
-#define TOPICO_TELA_09 6
-#define TOPICO_TELA_10 7
+#define TOPICO_TELA 6
+
  
 
 void iniciaTimestamp();
@@ -23,5 +23,6 @@ void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vent
 
 void serializeTv(int comando);
 void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
+void serializeTelaRetratil(int tela, bool up, bool down, bool pause);
 
 #endif
