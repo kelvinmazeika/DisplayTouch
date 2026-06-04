@@ -13,10 +13,8 @@ void updateTela(int modulo);
 void addSalaExtra(int modulo);
 void removeSalaExtra(int modulo);
 
-void onOffLuz(int sala, bool frenteAtras, bool estadoLampada);
-void onOffTv(int sala, bool estado);
-
 void deserializeModuloAnalise(const String &mensagem);
 
+void updateBotoesAc(int confirmado);
 
 #endif

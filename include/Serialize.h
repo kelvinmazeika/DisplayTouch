@@ -18,14 +18,13 @@
 
 void iniciaTimestamp();
 
-void publicarComandProjetor(const char *sala, bool power, bool congelamento);
-bool projEstadoPower = 0;
-bool projEstadoFreeze = 0;
-void serializarAc(int esp, int qualAr, bool estado, int temp, int modo, int vento); //Verificar JSON e terminar de preencher parametros
+void serializeProjetor(int power, bool congelamento);
+
+void serializeAc(bool estado, int temp, int modo, int vento); //Verificar JSON e terminar de preencher parametros
 
 void serializeTv(int comando);
-void serializeLampada(int sala, bool estadoLampadaTras, bool estadoLampadaFrente);
-void serializeTelaRetratil(int tela, bool up, bool down, bool pause);
+void serializeLampada(int sala, bool lampadaFrente, int estadoLampada);
+void serializeTelaRetratil(bool up, bool down, bool pause);
 
 void onOffTodasLuzes(bool estadoLuzes);
 

@@ -2,181 +2,131 @@
 #include <Nextion.h>
 #include <DisplayButtons.h>
 
+bool luzSalaExtra = 0;
+bool arSalaExtra = 0;
+bool projSalaExtra = 0;
+
+uint32_t projetoresSelecionados[2] = {0, 0};
+
+uint32_t acSelecionados[4] = {0, 0, 0, 0};
+
 Timezone tempo;
 
-NexButton botaoBackLuz1(1, 4, "b0");
-NexButton botaoBackLuz2(2, 8, "b0");
-NexButton botaoBackAc1(3, 2, "b0");
-NexButton botaoBackAc2(4, 2, "b0");
-NexButton botaoBackAc3(5, 2, "b0");
-NexButton botaoBackProj1(6, 2, "b0");
-NexButton botaoBackProj2(7, 2, "b0");
-NexButton botaoBackTv1(8, 2, "b0");
-NexButton botaoBackTv2(9, 2, "b0");
-NexButton botaoBackTv3(10, 2, "b0");
+//tela inicial
+NexButton telaLuz(0, 2, "b0");
+NexButton telaAc(0, 3, "b1");
+NexButton telaProj(0, 4, "b2");
+NexButton telaTv(0, 5, "b3");
+NexButton telaSensor(0, 6, "b4");
+NexButton telaSettings(0, 7, "b5");
 
-// Tela Inicial
+//tela luz 1, 2
+NexButton backLuz1(1, 4, "b0");
+NexButton adicionarSalaExtraLuz(1, 8, "b1");
 
-NexButton botaoLuz(0, 2, "b0");
-NexButton botaoAr(0, 3, "b1");
-NexButton botaoProj(0, 4, "b2");
-NexButton botaoTv(0, 5, "b3");
-NexButton botaoSens(0, 6, "b4");
-NexButton botaoSettings(0, 7, "b5");
+NexDSButton botaoLuzA1(1, 2, "bt0");
+NexDSButton botaoLuzB1(1, 3, "bt1");
+NexButton acenderTodasLuzes1(1, 5, "b2");
+NexButton apagarTodasLuzes1(1, 6, "b3");
+NexButton configurarTimerLuzes1(1, 7, "b4");
 
-// Tela Luz (1, 2, 3)
+NexButton backLuz2(2, 2, "b0");
+NexButton removerSalaExtraLuz(2, 3, "b1");
 
-NexButton botaoLuzA(1, 2, "b1");
-NexButton botaoLuzB(1, 5, "b2");
-NexButton acenderTodasLuzes1(1, 3, "b3");
-NexButton apagarTodasLuzes1(1, 6, "b4");
-NexButton configurarTimerLuzes(1, 7, "b5");
-NexButton adicionarSalaExtraLuz(1, 8, "b6");
+NexDSButton botaoLuzA2(2, 4, "bt0");
+NexDSButton botaoLuzB2(2, 5, "bt1");
+NexDSButton botaoLuzC2(2, 6, "bt2");
+NexDSButton botaoLuzD2(2, 7, "bt3");
+NexButton acenderTodasLuzes2(2, 8, "b2");
+NexButton apagarTodasLuzes2(2, 9, "b3");
+NexButton configurarTimerLuzes2(2, 10, "b4");
 
-NexButton botaoLuzA2(2, 2, "b1");
-NexButton botaoLuzB2(2, 3, "b2");
-NexButton botaoLuzC2(2, 9, "b7");
-NexButton botaoLuzD2(2, 10, "b8");
-NexButton acenderTodasLuzes2(2, 4, "b3");
-NexButton apagarTodasLuzes2(2, 5, "b4");
-NexButton configurarTimerLuzes2(2, 6, "b5");
-NexButton removerSalaExtraLuz(2, 7, "b6");
-
-// Tela Ar Condicionado (3, 4, 5)
-
-NexButton botaoAcA(3, 4, "b2");
-NexButton aumentarTempAc(3, 5, "b3");
-NexButton diminuirTempAc(3, 6, "b4");
-NexButton modoCoolAc(3, 7, "b5");
-NexButton modoFanAc(3, 8, "b6");
-NexButton modoDryAc(3, 9, "b7");
-NexButton modoHeatAc(3, 10, "b8");
-NexButton ventoAutoAc(3, 11, "b9");
-NexButton ventoBaixoAc(3, 12, "b10");
-NexButton ventoMedioAc(3, 13, "b11");
-NexButton ventoAltoAc(3, 14, "b12");
-NexButton botaoAcB(3, 15, "b13");
-NexButton aumentarTempAcB(3, 16, "b14");
-NexButton diminuirTempAcB(3, 17, "b15");
-NexButton modoCoolAcB(3, 18, "b16");
-NexButton modoFanAcB(3, 19, "b17");
-NexButton modoDryAcB(3, 20, "b18");
-NexButton modoHeatAcB(3, 21, "b19");
-NexButton ventoAutoAcB(3, 22, "b20");
-NexButton ventoBaixoAcB(3, 23, "b21");
-NexButton ventoMedioAcB(3, 24, "b22");
-NexButton ventoAltoAcB(3, 25, "b23");
+//tela ar condicionado 3, 4
+NexButton backAc1(3, 2, "b0");
 NexButton adicionarSalaExtraAc(3, 3, "b1");
+NexText textoTemp1(3, 9, "t0");
 
-NexButton botaoAcA2(4, 4, "b2");
-NexButton aumentarTempAc2(4, 5, "b3");
-NexButton diminuirTempAc2(4, 6, "b4");
-NexButton modoCoolAc2(4, 7, "b5");
-NexButton modoFanAc2(4, 8, "b6");
-NexButton modoDryAc2(4, 9, "b7");
-NexButton modoHeatAc2(4, 10, "b8");
-NexButton ventoAutoAc2(4, 11, "b9");
-NexButton ventoBaixoAc2(4, 12, "b10");
-NexButton ventoMedioAc2(4, 13, "b11");
-NexButton ventoAltoAc2(4, 14, "b12");
-NexButton botaoAcB2(4, 15, "b13");
-NexButton aumentarTempAcB2(4, 16, "b14");
-NexButton diminuirTempAcB2(4, 17, "b15");
-NexButton modoCoolAcB2(4, 18, "b16");
-NexButton modoFanAcB2(4, 19, "b17");
-NexButton modoDryAcB2(4, 20, "b18");
-NexButton modoHeatAcB2(4, 21, "b19");
-NexButton ventoAutoAcB2(4, 22, "b20");
-NexButton ventoBaixoAcB2(4, 23, "b21");
-NexButton ventoMedioAcB2(4, 24, "b22");
-NexButton ventoAltoAcB2(4, 25, "b23");
+NexDSButton botaoAcOnOff(3, 4, "bt0");
+NexDSButton selecionarAcA1(3, 5, "bt1");
+NexDSButton selecionarAcB1(3, 6, "bt2");
+NexButton aumentarTempAc1(3, 7, "b2");
+NexButton diminuirTempAc1(3, 8, "b3");
+NexDSButton modoCoolAc1(3, 10, "bt3");
+NexDSButton modoFanAc1(3, 11, "bt4");
+NexDSButton modoDryAc1(3, 12, "bt5");
+NexDSButton modoHeatAc1(3, 13, "bt6");
+NexDSButton ventoAutoAc1(3, 14, "bt7");
+NexDSButton ventoBaixoAc1(3, 15, "bt8");
+NexDSButton ventoMedioAc1(3, 16, "bt9");
+NexDSButton ventoAltoAc1(3, 17, "bt10");
+NexDSButton ventoSilentAc1(3, 18, "bt11");
+NexButton confirmarConfigAc1(3, 19, "b4");
+
+NexButton backAc2(4, 2, "b0");
 NexButton removerSalaExtraAc(4, 3, "b1");
-NexButton pageAc2(4, 26, "b24");
+NexText textoTemp2(4, 11, "t0");
 
-NexButton botaoAcC3(5, 4, "b2");
-NexButton aumentarTempAc3(5, 5, "b3");
-NexButton diminuirTempAc3(5, 6, "b4");
-NexButton modoCoolAc3(5, 7, "b5");
-NexButton modoFanAc3(5, 8, "b6");
-NexButton modoDryAc3(5, 9, "b7");
-NexButton modoHeatAc3(5, 10, "b8");
-NexButton ventoAutoAc3(5, 11, "b9");
-NexButton ventoBaixoAc3(5, 12, "b10");
-NexButton ventoMedioAc3(5, 13, "b11");
-NexButton ventoAltoAc3(5, 14, "b12");
-NexButton removerSalaExtraAc3(5, 3, "b1");
-NexButton botaoAcD3(5, 15, "b13");
-NexButton aumentarTempAcD3(5, 16, "b14");
-NexButton diminuirTempAcD3(5, 17, "b15");
-NexButton modoCoolAcD3(5, 18, "b16");
-NexButton modoFanAcD3(5, 19, "b17");
-NexButton modoDryAcD3(5, 20, "b18");
-NexButton modoHeatAcD3(5, 21, "b19");
-NexButton ventoAutoAcD3(5, 22, "b20");
-NexButton ventoBaixoAcD3(5, 23, "b21");
-NexButton ventoMedioAcD3(5, 24, "b22");
-NexButton ventoAltoAcD3(5, 25, "b23");
-NexButton pageAc3(5, 26, "b24");
+NexDSButton botaoAcOnOff2(4, 4, "bt0");
+NexDSButton selecionarAcA2(4, 5, "bt1");
+NexDSButton selecionarAcB2(4, 6, "bt2");
+NexDSButton selecionarAcC2(4, 7, "bt3");
+NexDSButton selecionarAcD2(4, 8, "bt4");
+NexButton aumentarTempAc2(4, 9, "b2");
+NexButton diminuirTempAc2(4, 10, "b3");
+NexDSButton modoCoolAc2(4, 12, "bt5");
+NexDSButton modoFanAc2(4, 13, "bt6");
+NexDSButton modoDryAc2(4, 14, "bt7");
+NexDSButton modoHeatAc2(4, 15, "bt8");
+NexDSButton ventoAutoAc2(4, 16, "bt9");
+NexDSButton ventoBaixoAc2(4, 17, "bt10");
+NexDSButton ventoMedioAc2(4, 18, "bt11");
+NexDSButton ventoAltoAc2(4, 19, "bt12");
+NexDSButton ventoSilentAc2(4, 20, "bt13");
+NexButton confirmarConfigAc2(4, 21, "b4");
 
-// Tela Projetor (6, 7)
+//tela projetor 5, 6
+NexButton backProj1(5, 2, "b0");
+NexButton adicionarSalaExtraProj(5, 3, "b1");
 
-NexButton adicionarSalaExtraProj(6, 3, "b1");
-NexButton telaRetratilUp(6, 4, "b2");
-NexButton telaRetratilStop(6, 5, "b3");
-NexButton telaRetratilDown(6, 6, "b4");
-NexButton projetorAOn(6, 7, "b5");
-NexButton projetorAFreeze(6, 8, "b6");
+NexButton telaRetratilUp1(5, 4, "b2");
+NexButton telaRetratilStop1(5, 5, "b3");
+NexButton telaRetratilDown1(5, 6, "b4");
+NexDSButton projetorOnOff1(5, 7, "bt0");
+NexDSButton projetorFreeze1(5, 8, "bt1");
 
-NexButton removerSalaExtraProj(7, 3, "b1");
-NexButton telaRetratilUp2(7, 4, "b2");
-NexButton telaRetratilStop2(7, 5, "b3");
-NexButton telaRetratilDown2(7, 6, "b4");
-NexButton projetorAOn2(7, 7, "b5");
-NexButton projetorAFreeze2(7, 8, "b6");
-NexButton telaRetratilBUp2(7, 9, "b7");
-NexButton telaRetratilBStop2(7, 10, "b8");
-NexButton telaRetratilBDown2(7, 11, "b9");
-NexButton projetorBOn2(7, 12, "b10");
-NexButton projetorBFreeze2(7, 13, "b11");
+NexButton backProj2(6, 2, "b0");
+NexButton removerSalaExtraProj(6, 3, "b1");
 
-// Tela TV (8, 9, 10)
+NexButton telaRetratilUp2(6, 4, "b2");
+NexButton telaRetratilStop2(6, 5, "b3");
+NexButton telaRetratilDown2(6, 6, "b4");
+NexDSButton projetorOnOff2(6, 7, "bt0");
+NexDSButton projetorFreeze2(6, 8, "bt1");
+NexDSButton selecionarProjetorA(6, 9, "bt2");
+NexDSButton selecionarProjetorB(6, 10, "bt3");
 
-NexButton adicionarSalaExtraTv(8, 3, "b1");
-NexButton tvAOn(8, 12, "bt0");
-NexButton tvAReturn(8, 5, "b3");
-NexButton tvAVolumeUp(8, 6, "b4");
-NexButton tvAVolumeDown(8, 7, "b5");
-NexButton tvAUp(8, 8, "b6");
-NexButton tvADown(8, 9, "b7");
-NexButton tvALeft(8, 10, "b8");
-NexButton tvARight(8, 11, "b9");
-NexButton tvASelect(8, 12, "b10");
+//tela tv 7
+NexButton backTv(7, 2, "b0");
 
-NexButton removerSalaExtraTv(9, 3, "b1");
-NexButton tvAOn2(9, 13, "bt0");
-NexButton tvAReturn2(9, 5, "b3");
-NexButton tvAVolumeUp2(9, 6, "b4");
-NexButton tvAVolumeDown2(9, 7, "b5");
-NexButton tvAUp2(9, 8, "b6");
-NexButton tvADown2(9, 9, "b7");
-NexButton tvALeft2(9, 10, "b8");
-NexButton tvARight2(9, 11, "b9");
-NexButton tvASelect2(9, 12, "b10");
-NexButton tvPageB2(9, 13, "b11");
+NexButton returnTv(7, 3, "b1");
+NexButton aumentarVolumeTv(7, 4, "b2");
+NexButton diminuirVolumeTv(7, 5, "b3");
+NexButton dPadUpTv(7, 6, "b4");
+NexButton dPadDownTv(7, 7, "b5");
+NexButton dPadLeftTv(7, 8, "b6");
+NexButton dPadRightTv(7, 9, "b7");
+NexButton dPadSelectTv(7, 10, "b8");
+NexDSButton botaoTvOnOff(7, 11, "bt0");
 
-NexButton removerSalaExtraTv2(10, 3, "b1");
-NexButton tvBOn3(10, 13, "bt0");
-NexButton tvBReturn3(10, 5, "b3");
-NexButton tvBVolumeUp3(10, 6, "b4");
-NexButton tvBVolumeDown3(10, 7, "b5");
-NexButton tvBUp3(10, 8, "b6");
-NexButton tvBDown3(10, 9, "b7");
-NexButton tvBLeft3(10, 10, "b8");
-NexButton tvBRight3(10, 11, "b9");
-NexButton tvBSelect3(10, 12, "b10");
-NexButton tvPageA3(10, 13, "b11");
+//tela sensor 8
+NexButton backSensor(8, 2, "b0");
+NexText textoTempLadoA(8, 3, "t0");
+NexText textoUmidadeLadoA(8, 4, "t1");
+NexText textoRuidoLadoA(8, 5, "t2");
+NexText textoTempLadoB(8, 7, "t4");
+NexText textoUmidadeLadoB(8, 8, "t5");
+NexText textoRuidoLadoB(8, 9, "t6");
+NexText textoAmbienteSensor(8, 6, "t3");
 
-NexText textTempAnalise(12, 2, "t0");
-NexText textUmidAnalise(12, 3, "t1");
-NexText textRuidoAnalise(12, 4, "t2");
-NexText textAlertaRuido(12, 5, "t3");
+//tela settings 9
+NexButton backSettings(9, 2, "b0");
