@@ -15,10 +15,10 @@ void setup()
 {
   configDebug();
 
-  connectToWifi();
-  configureMQTT();
-  registerCallbackMessage(tratarMensagemRecebida);
-  connectToMQTT();
+  //connectToWifi();
+  //configureMQTT();
+  //registerCallbackMessage(tratarMensagemRecebida);
+  //connectToMQTT();
 
   configurarNextion();
   configurarTelaInicial();
@@ -34,8 +34,8 @@ void setup()
 
 void loop()
 {
-  grantMQTTConnection();
-  grantWiFiAccess();
+  //grantMQTTConnection();
+  //grantWiFiAccess();
   nexLoop();
   events();
 }

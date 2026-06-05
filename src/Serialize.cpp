@@ -133,15 +133,14 @@ void serializeProjetor(int power, bool congelamento)
     {
         if (projetoresSelecionados[i] == 1)
         {
-            JsonObject projetor = doc.createNestedObject("projetor");
-            projetor["estadoPower"] = power;
-            projetor["estadoCongelamento"] = congelamento;
+            doc["projetor"]["estadoPower"] = power;
+            doc["projetor"]["estadoCongelamento"] = congelamento;
             serializeJson(doc, mensagemProj);
             debugInfo(mensagemProj);
             if (i == 0)
-            publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
+                publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
             else if (i == 1)
-            publicarMensagemNoTopico(TOPICO_PROJ_10, mensagemProj.c_str());
+                publicarMensagemNoTopico(TOPICO_PROJ_10, mensagemProj.c_str());
         }
     }
 }
@@ -150,20 +149,20 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
 {
     JsonDocument doc;
 
-    for(int i = 0; i < 2; i++)
-{
-    if(projetoresSelecionados[i] == 1)
+    for (int i = 0; i < 2; i++)
     {
-        doc["telaRetratil"]["tela"] = i;
-        doc["telaRetratil"]["UP"] = false;
-        doc["telaRetratil"]["PAUSE"] = true;
-        doc["telaRetratil"]["DOWN"] = false;
-        doc["telaRetratil"]["timestamp"] = tempo.now();
-        doc["telaRetratil"]["tempo"] = tempo.dateTime();
-    
-        serializeJson(doc, mensagemTela);
-        publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
-        debugInfo(mensagemTela);
-    }
+        if (projetoresSelecionados[i] == 1)
+        {
+            doc["telaRetratil"]["tela"] = i;
+            doc["telaRetratil"]["UP"] = false;
+            doc["telaRetratil"]["PAUSE"] = true;
+            doc["telaRetratil"]["DOWN"] = false;
+            doc["telaRetratil"]["timestamp"] = tempo.now();
+            doc["telaRetratil"]["tempo"] = tempo.dateTime();
+
+            serializeJson(doc, mensagemTela);
+            publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
+            debugInfo(mensagemTela);
+        }
     }
 }

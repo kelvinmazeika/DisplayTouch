@@ -15,6 +15,6 @@ void removeSalaExtra(int modulo);
 
 void deserializeModuloAnalise(const String &mensagem);
 
-void updateBotoesAc(int confirmado);
+void updateBotoesAc(bool confirmado);
 
 #endif

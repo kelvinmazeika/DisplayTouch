@@ -4,13 +4,13 @@
 #include <Arduino.h>
 #include <ezTime.h>
 
-extern bool luzSalaExtra = 0;
-extern bool arSalaExtra = 0;
-extern bool projSalaExtra = 0;
+extern bool luzSalaExtra;
+extern bool arSalaExtra;
+extern bool projSalaExtra;
 
 extern uint32_t acSelecionados[4];
 
-uint32_t projetoresSelecionados[2];
+extern uint32_t projetoresSelecionados[2];
 
 extern Timezone tempo;
 
