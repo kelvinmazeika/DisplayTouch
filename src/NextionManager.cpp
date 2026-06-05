@@ -26,11 +26,13 @@ char buffer[100];
 
 uint32_t estadoAc = 0;
 int temperaturaAc = 24;
-uint32_t modoAc = 0;
-uint32_t ventoAc = 0;
+uint32_t modoAc = 10;
+uint32_t ventoAc = 10;
 
 uint32_t estadoProjetor = 0;
 uint32_t estadoFreezeProjetor = 0;
+uint32_t estadoProjetor2 = 0;
+uint32_t estadoFreezeProjetor2 = 0;
 
 
 const uint32_t BAUD_NEXTION = 9600;
@@ -60,230 +62,229 @@ void configurarTelaInicial()
 {
     sendCommand("page inicial");
     delay(500);
-    sendCommand("bkcmd=3");
+    sendCommand("bkcmd=0");
     delay(100);
 }
 
 void configurarEventosNextion()
 {
     // tela inicial 0
-    telaLuz.attachPush([]()
-                       { updateTela(1); });
-    telaAc.attachPush([]()
+    telaLuz.attachPop([](){updateTela(1);});
+    telaAc.attachPop([]()
                       { updateTela(2); });
-    telaProj.attachPush([]()
+    telaProj.attachPop([]()
                         { updateTela(3); });
-    telaTv.attachPush([]()
+    telaTv.attachPop([]()
                       { updateTela(4); });
-    telaSensor.attachPush([]()
+    telaSensor.attachPop([]()
                           { updateTela(5); });
-    telaSettings.attachPush([]()
+    telaSettings.attachPop([]()
                             { updateTela(6); });
 
     // tela luz 1, 2
-    backLuz1.attachPush([]()
+    backLuz1.attachPop([]()
                         { updateTela(0); });
-    adicionarSalaExtraLuz.attachPush([]()
+    adicionarSalaExtraLuz.attachPop([]()
                                      { addSalaExtra(0); });
-    botaoLuzA1.attachPush([]()
+    botaoLuzA1.attachPop([]()
                           {
         botaoLuzA1.getValue(&estadoLuzes[0][0]);
         serializeLampada(9, 0, estadoLuzes[0][0]); });
-    botaoLuzB1.attachPush([]()
+    botaoLuzB1.attachPop([]()
                           {
         botaoLuzB1.getValue(&estadoLuzes[0][1]);
         serializeLampada(9, 1, estadoLuzes[0][1]); });
-    acenderTodasLuzes1.attachPush([]()
+    acenderTodasLuzes1.attachPop([]()
                                   { onOffTodasLuzes(1); });
-    apagarTodasLuzes1.attachPush([]()
+    apagarTodasLuzes1.attachPop([]()
                                  { onOffTodasLuzes(0); });
 
-    backLuz2.attachPush([]()
+    backLuz2.attachPop([]()
                         { updateTela(0); });
-    removerSalaExtraLuz.attachPush([]()
+    removerSalaExtraLuz.attachPop([]()
                                    { removeSalaExtra(0); });
-    botaoLuzA2.attachPush([]()
+    botaoLuzA2.attachPop([]()
                           {
         botaoLuzA2.getValue(&estadoLuzes[0][0]);
-        serializeLampada(10, 0, estadoLuzes[0][0]); });
-    botaoLuzB2.attachPush([]()
+        serializeLampada(9, 0, estadoLuzes[0][0]); });
+    botaoLuzB2.attachPop([]()
                           {
         botaoLuzB2.getValue(&estadoLuzes[0][1]);
-        serializeLampada(10, 1, estadoLuzes[0][1]); });
-    botaoLuzC2.attachPush([]()
+        serializeLampada(9, 1, estadoLuzes[0][1]); });
+    botaoLuzC2.attachPop([]()
                           {
         botaoLuzC2.getValue(&estadoLuzes[1][0]);
         serializeLampada(10, 0, estadoLuzes[1][0]); });
-    botaoLuzD2.attachPush([]()
+    botaoLuzD2.attachPop([]()
                           {
         botaoLuzD2.getValue(&estadoLuzes[1][1]);
         serializeLampada(10, 1, estadoLuzes[1][1]); });
-    acenderTodasLuzes2.attachPush([]()
+    acenderTodasLuzes2.attachPop([]()
                                   { onOffTodasLuzes(1); });
-    apagarTodasLuzes2.attachPush([]()
+    apagarTodasLuzes2.attachPop([]()
                                  { onOffTodasLuzes(0); });
 
     // tela ar condicionado 3, 4
-    backAc1.attachPush([]()
+    backAc1.attachPop([]()
                        { updateTela(0); });
-    adicionarSalaExtraAc.attachPush([]()
+    adicionarSalaExtraAc.attachPop([]()
                                     { addSalaExtra(1); });
 
-    selecionarAcA1.attachPush([]()
+    selecionarAcA1.attachPop([]()
                               { selecionarAcA1.getValue(&acSelecionados[0]); });
-    selecionarAcB1.attachPush([]()
+    selecionarAcB1.attachPop([]()
                               { selecionarAcB1.getValue(&acSelecionados[1]); });
-    botaoAcOnOff.attachPush([]()
+    botaoAcOnOff.attachPop([]()
                             { botaoAcOnOff.getValue(&estadoAc); });
-    aumentarTempAc1.attachPush([]()
+    aumentarTempAc1.attachPop([]()
                                {temperaturaAc++;if(temperaturaAc > 30) temperaturaAc = 30;const char* tempStr = String(temperaturaAc).c_str(); textoTemp1.setText(tempStr); });
-    diminuirTempAc1.attachPush([]()
+    diminuirTempAc1.attachPop([]()
                                {temperaturaAc--;if(temperaturaAc < 16) temperaturaAc = 16;const char* tempStr = String(temperaturaAc).c_str(); textoTemp1.setText(tempStr); });
-    modoCoolAc1.attachPush([]()
+    modoCoolAc1.attachPop([]()
                            {
         modoCoolAc1.getValue(&modoAc);
         if(modoAc) modoAc = 0;updateBotoesAc(0); });
-    modoFanAc1.attachPush([]()
+    modoFanAc1.attachPop([]()
                           {
         modoFanAc1.getValue(&modoAc);
         if(modoAc) modoAc = 1;updateBotoesAc(0); });
-    modoDryAc1.attachPush([]()
+    modoDryAc1.attachPop([]()
                           {
         modoDryAc1.getValue(&modoAc);
         if(modoAc) modoAc = 2;updateBotoesAc(0); });
-    modoHeatAc1.attachPush([]()
+    modoHeatAc1.attachPop([]()
                            {
         modoHeatAc1.getValue(&modoAc);
         if(modoAc) modoAc = 3;updateBotoesAc(0); });
-    ventoAutoAc1.attachPush([]()
+    ventoAutoAc1.attachPop([]()
                             {
         ventoAutoAc1.getValue(&ventoAc);
         if(ventoAc) ventoAc = 0;updateBotoesAc(0); });
-    ventoBaixoAc1.attachPush([]()
+    ventoBaixoAc1.attachPop([]()
                              {
         ventoBaixoAc1.getValue(&ventoAc);
         if(ventoAc) ventoAc = 1;updateBotoesAc(0); });
-    ventoMedioAc1.attachPush([]()
+    ventoMedioAc1.attachPop([]()
                              {
         ventoMedioAc1.getValue(&ventoAc);
         if(ventoAc) ventoAc = 2;updateBotoesAc(0); });
-    ventoAltoAc1.attachPush([]()
+    ventoAltoAc1.attachPop([]()
                             {
         ventoAltoAc1.getValue(&ventoAc);
         if(ventoAc) ventoAc = 3;updateBotoesAc(0); });
-    ventoSilentAc1.attachPush([]()
+    ventoSilentAc1.attachPop([]()
                               {
         ventoSilentAc1.getValue(&ventoAc);
         if(ventoAc) ventoAc = 4;updateBotoesAc(0); });
-    confirmarConfigAc1.attachPush([]()
+    confirmarConfigAc1.attachPop([]()
                                   {serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);updateBotoesAc(1); });
 
-    backAc2.attachPush([]()
+    backAc2.attachPop([]()
                        { updateTela(0); });
-    removerSalaExtraAc.attachPush([]()
+    removerSalaExtraAc.attachPop([]()
                                   { removeSalaExtra(1); });
 
-    selecionarAcA2.attachPush([]()
+    selecionarAcA2.attachPop([]()
                               { selecionarAcA2.getValue(&acSelecionados[0]); });
-    selecionarAcB2.attachPush([]()
+    selecionarAcB2.attachPop([]()
                               { selecionarAcB2.getValue(&acSelecionados[1]); });
-    selecionarAcC2.attachPush([]()
+    selecionarAcC2.attachPop([]()
                               { selecionarAcC2.getValue(&acSelecionados[2]); });
-    selecionarAcD2.attachPush([]()
+    selecionarAcD2.attachPop([]()
                               { selecionarAcD2.getValue(&acSelecionados[3]); });
-    botaoAcOnOff2.attachPush([]()
+    botaoAcOnOff2.attachPop([]()
                              { botaoAcOnOff2.getValue(&estadoAc); });
-    aumentarTempAc2.attachPush([]()
+    aumentarTempAc2.attachPop([]()
                                {temperaturaAc++;if(temperaturaAc > 30) temperaturaAc = 30;const char* tempStr = String(temperaturaAc).c_str(); textoTemp2.setText(tempStr); });
-    diminuirTempAc2.attachPush([]()
+    diminuirTempAc2.attachPop([]()
                                {temperaturaAc--;if(temperaturaAc < 16) temperaturaAc = 16;const char* tempStr = String(temperaturaAc).c_str(); textoTemp2.setText(tempStr); });
-    modoCoolAc2.attachPush([](){
+    modoCoolAc2.attachPop([](){
         modoCoolAc2.getValue(&modoAc);
         if(modoAc) modoAc = 0;updateBotoesAc(0); });
-    modoFanAc2.attachPush([](){
+    modoFanAc2.attachPop([](){
         modoFanAc2.getValue(&modoAc);
         if(modoAc) modoAc = 1;updateBotoesAc(0); });
-    modoDryAc2.attachPush([](){
+    modoDryAc2.attachPop([](){
         modoDryAc2.getValue(&modoAc);
         if(modoAc) modoAc = 2;updateBotoesAc(0); });
-    modoHeatAc2.attachPush([](){
+    modoHeatAc2.attachPop([](){
         modoHeatAc2.getValue(&modoAc);
         if(modoAc) modoAc = 3;updateBotoesAc(0); });
-    ventoAutoAc2.attachPush([](){
+    ventoAutoAc2.attachPop([](){
         ventoAutoAc2.getValue(&ventoAc);
         if(ventoAc) ventoAc = 0;updateBotoesAc(0); });
-    ventoBaixoAc2.attachPush([](){
+    ventoBaixoAc2.attachPop([](){
         ventoBaixoAc2.getValue(&ventoAc);
         if(ventoAc) ventoAc = 1;updateBotoesAc(0); });
-    ventoMedioAc2.attachPush([](){
+    ventoMedioAc2.attachPop([](){
         ventoMedioAc2.getValue(&ventoAc);
         if(ventoAc) ventoAc = 2;updateBotoesAc(0); });
-    ventoAltoAc2.attachPush([](){
+    ventoAltoAc2.attachPop([](){
         ventoAltoAc2.getValue(&ventoAc);
         if(ventoAc) ventoAc = 3;updateBotoesAc(0); });
-    ventoSilentAc2.attachPush([](){
+    ventoSilentAc2.attachPop([](){
         ventoSilentAc2.getValue(&ventoAc);
         if(ventoAc) ventoAc = 4;updateBotoesAc(0); });
-    confirmarConfigAc2.attachPush([](){
+    confirmarConfigAc2.attachPop([](){
         serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);
         updateBotoesAc(1); });
 
     //tela projetor 5, 6
-    backProj1.attachPush([](){ updateTela(0); });
-    adicionarSalaExtraProj.attachPush([](){ addSalaExtra(2); });
+    backProj1.attachPop([](){ updateTela(0); });
+    adicionarSalaExtraProj.attachPop([](){ addSalaExtra(2); });
 
-    telaRetratilUp1.attachPush([](){ serializeTelaRetratil(1, 0, 0); });
-    telaRetratilStop1.attachPush([](){ serializeTelaRetratil(0, 0, 1); });
-    telaRetratilDown1.attachPush([](){ serializeTelaRetratil(0, 1, 0); });
-    projetorOnOff1.attachPush([](){
+    telaRetratilUp1.attachPop([](){ serializeTelaRetratil(1, 0, 0); });
+    telaRetratilStop1.attachPop([](){ serializeTelaRetratil(0, 0, 1); });
+    telaRetratilDown1.attachPop([](){ serializeTelaRetratil(0, 1, 0); });
+    projetorOnOff1.attachPop([](){
         projetorOnOff1.getValue(&estadoProjetor);
         serializeProjetor(estadoProjetor, false); });
-    projetorFreeze1.attachPush([](){
+    projetorFreeze1.attachPop([](){
         projetorFreeze1.getValue(&estadoFreezeProjetor);
         serializeProjetor(false, estadoFreezeProjetor); });
-    backProj2.attachPush([](){ updateTela(0); });
-    removerSalaExtraProj.attachPush([](){ removeSalaExtra(2); });
-    selecionarProjetorA.attachPush([](){
+    backProj2.attachPop([](){ updateTela(0); });
+    removerSalaExtraProj.attachPop([](){ removeSalaExtra(2); });
+    selecionarProjetorA.attachPop([](){
         selecionarProjetorA.getValue(&projetoresSelecionados[0]);});
-    selecionarProjetorB.attachPush([](){
+    selecionarProjetorB.attachPop([](){
         selecionarProjetorB.getValue(&projetoresSelecionados[1]);});
-    telaRetratilUp2.attachPush([](){ serializeTelaRetratil(1, 0, 0); });
-    telaRetratilStop2.attachPush([](){ serializeTelaRetratil(0, 0, 1); });
-    telaRetratilDown2.attachPush([](){ serializeTelaRetratil(0, 1, 0); });
-    projetorOnOff2.attachPush([](){
-        projetorOnOff2.getValue(&estadoProjetor);
-        serializeProjetor(estadoProjetor, false); });
-    projetorFreeze2.attachPush([](){
-        projetorFreeze2.getValue(&estadoFreezeProjetor);
-        serializeProjetor(false, estadoFreezeProjetor); });
+    telaRetratilUp2.attachPop([](){ serializeTelaRetratil(1, 0, 0); });
+    telaRetratilStop2.attachPop([](){ serializeTelaRetratil(0, 0, 1); });
+    telaRetratilDown2.attachPop([](){ serializeTelaRetratil(0, 1, 0); });
+    projetorOnOff2.attachPop([](){
+        projetorOnOff2.getValue(&estadoProjetor2);
+        serializeProjetor(estadoProjetor2, false); });
+    projetorFreeze2.attachPop([](){
+        projetorFreeze2.getValue(&estadoFreezeProjetor2);
+        serializeProjetor(false, &estadoFreezeProjetor2);});
 
     //tela tv 7
-    backTv.attachPush([](){ updateTela(0); });
+    backTv.attachPop([](){ updateTela(0); });
 
-    botaoTvOnOff.attachPush([](){
+    botaoTvOnOff.attachPop([](){
         serializeTv(1); });
-    returnTv.attachPush([](){
-        serializeTv(2); });
-    aumentarVolumeTv.attachPush([](){
-        serializeTv(3); });
-    diminuirVolumeTv.attachPush([](){
-        serializeTv(4); });
-    dPadUpTv.attachPush([](){
-        serializeTv(5); });
-    dPadDownTv.attachPush([](){
-        serializeTv(6); });
-    dPadLeftTv.attachPush([](){
-        serializeTv(7); });
-    dPadRightTv.attachPush([](){
-        serializeTv(8); });
-    dPadSelectTv.attachPush([](){
+    returnTv.attachPop([](){
         serializeTv(9); });
+    aumentarVolumeTv.attachPop([](){
+        serializeTv(2); });
+    diminuirVolumeTv.attachPop([](){
+        serializeTv(3); });
+    dPadUpTv.attachPop([](){
+        serializeTv(6); });
+    dPadDownTv.attachPop([](){
+        serializeTv(7); });
+    dPadLeftTv.attachPop([](){
+        serializeTv(5); });
+    dPadRightTv.attachPop([](){
+        serializeTv(4); });
+    dPadSelectTv.attachPop([](){
+        serializeTv(8); });
 
     //tela sensor 8
-    backSensor.attachPush([](){ updateTela(0); });
+    backSensor.attachPop([](){ updateTela(0); });
 
     //tela settings 9
-    backSettings.attachPush([](){ updateTela(0); });
+    backSettings.attachPop([](){ updateTela(0); });
 
    nexListen(telaLuz);
    nexListen(telaAc);
@@ -392,9 +393,9 @@ void updateTela(int modulo)
         break;
     case 3:
         if (projSalaExtra)
-            sendCommand("page proj1");
+            sendCommand("page projetor1");
         else
-            sendCommand("page proj0");
+            sendCommand("page projetor0");
         break;
     case 4:
         sendCommand("page tv");
@@ -507,6 +508,8 @@ void updateBotoesAc(bool confirmado)
         ventoSilentAc1.setValue(0);
         if (confirmado)
         {
+            modoAc = 10;
+            ventoAc = 10;
             return;
         }
         switch (modoAc)
@@ -556,6 +559,8 @@ void updateBotoesAc(bool confirmado)
         ventoSilentAc2.setValue(0);
         if (confirmado)
         {
+            modoAc = 10;
+            ventoAc = 10;
             return;
         }
         switch (modoAc)
@@ -592,4 +597,9 @@ void updateBotoesAc(bool confirmado)
             break;
         }
     }
+}
+
+void teste()
+{
+    Serial.println("detectou");
 }
