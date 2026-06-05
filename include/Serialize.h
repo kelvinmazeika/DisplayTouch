@@ -6,13 +6,16 @@
 #include "MqttManager.h"
 
 
-#define TOPICO_ANALISE 0
-#define TOPICO_TV 1
-#define TOPICO_PROJ_09 2
-#define TOPICO_PROJ_10 3
-#define TOPICO_AC 4
+#define TOPICO_ANALISE_09 0
+#define TOPICO_ANALISE_10 1
+
+
+#define TOPICO_TV 0
+#define TOPICO_AC 1
+#define TOPICO_TELA 2
+#define TOPICO_PROJ_09 3
+#define TOPICO_PROJ_10 4
 #define TOPICO_LAMP 5 
-#define TOPICO_TELA 6
 
  
 
