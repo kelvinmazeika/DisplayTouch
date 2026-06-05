@@ -273,5 +273,5 @@ bool isMQTTConnected()
 
 int getTotalTopicosRecebimento()
 {
-    return TOTAL_TOPICOS_PUBLICAR;
+    return TOTAL_TOPICOS_RECEBER;
 }
