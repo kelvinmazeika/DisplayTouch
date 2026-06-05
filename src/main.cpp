@@ -8,6 +8,7 @@
 #include "DebugManager.h"
 #include "NextionManager.h"
 #include "Serialize.h"
+#include "secrets.h"
 
 void tratarMensagemRecebida(const char *topico, const String &mensagem);
 
@@ -23,7 +24,7 @@ void setup()
   configurarNextion();
   configurarTelaInicial();
   configurarEventosNextion();
-  iniciaTimestamp();
+  //iniciaTimestamp();
   delay(1000);
 
   Serial.println();
@@ -37,7 +38,7 @@ void loop()
   grantMQTTConnection();
   grantWiFiAccess();
   nexLoop();
-  events();
+  //events();
 }
 
 void tratarMensagemRecebida(const char* topico, const String& mensagem)
@@ -55,7 +56,7 @@ void tratarMensagemRecebida(const char* topico, const String& mensagem)
   debugInfo("Tópico: " + String(topico));
   debugInfo("Mensagem: " + mensagem);
 
-  if(strcmp(topico, TOPICO_ANALISE) == 0)
+  if(strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_09]) == 0 || strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_10]) == 0)
   {
     deserializeModuloAnalise(mensagem);
     return;
