@@ -154,9 +154,9 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
         if (projetoresSelecionados[i] == 1)
         {
             doc["telaRetratil"]["tela"] = i;
-            doc["telaRetratil"]["UP"] = false;
-            doc["telaRetratil"]["PAUSE"] = true;
-            doc["telaRetratil"]["DOWN"] = false;
+            doc["telaRetratil"]["UP"] = up;
+            doc["telaRetratil"]["PAUSE"] = pause;
+            doc["telaRetratil"]["DOWN"] = down;
             doc["telaRetratil"]["timestamp"] = tempo.now();
             doc["telaRetratil"]["tempo"] = tempo.dateTime();
 

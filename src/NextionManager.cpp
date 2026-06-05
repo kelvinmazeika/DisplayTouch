@@ -25,7 +25,7 @@ u_long timeStampAnalise;
 char buffer[100];
 
 uint32_t estadoAc = 0;
-int temperaturaAc = 0;
+int temperaturaAc = 24;
 uint32_t modoAc = 0;
 uint32_t ventoAc = 0;
 
