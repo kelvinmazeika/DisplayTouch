@@ -23,7 +23,7 @@ void setup()
   configurarNextion();
   configurarTelaInicial();
   configurarEventosNextion();
-  iniciaTimestamp();
+  //iniciaTimestamp();
   delay(1000);
 
   Serial.println();
@@ -55,7 +55,7 @@ void tratarMensagemRecebida(const char* topico, const String& mensagem)
   debugInfo("Tópico: " + String(topico));
   debugInfo("Mensagem: " + mensagem);
 
-  if(strcmp(topico, TOPICO_ANALISE) == 0)
+  if(strcmp(topico, "senai134/shared/projeto/analise09") == 0)
   {
     deserializeModuloAnalise(mensagem);
     return;
