@@ -23,7 +23,7 @@ const int PINO_HABILITA_DEBUG_COMPLETO = 4;
 const char* MQTT_BROKER = "a3cxr9ayydc4np-ats.iot.us-east-1.amazonaws.com";
 const int MQTT_PORTA = 8883;
 
-const char* MQTT_CLIENT_ID = "esp32_kelvin_mazeika";
+const char* MQTT_CLIENT_ID = "wario-analise";
 
 const char* MQTT_USER = "kelvin";
 const char* MQTT_PASSWORD = "Senai@134";
@@ -38,18 +38,20 @@ const char MQTT_CERTIFICADO_CA[] PROGMEM = R"EOF()EOF";
 
 const char* TOPICOS_PUBLICAR[] = 
 {
-    "senai134/shared/projeto/lampada",
-    "senai134/shared/projeto/tv",
-    "senai134/shared/projeto/arcondicionado",
-    "senai134/shared/projeto/projetor",
-    "senai134/shared/projeto/telaretratil"
+    "senai134/shared/projeto/TV",
+    "senai134/shared/projeto/AC",
+    "senai134/shared/projeto/telaRetratil",
+    "senai134/shared/projeto/projetor09",
+    "senai134/shared/projeto/projetor10"
 };
 
 const int TOTAL_TOPICOS_PUBLICAR = sizeof(TOPICOS_PUBLICAR) / sizeof(TOPICOS_PUBLICAR[0]);
 
 const char* TOPICOS_RECEBER[] =
 {
-    "senai134/shared/projeto/analise"
+    "senai134/shared/projeto/analise09",
+    "senai134/shared/projeto/analise10",
+    "senai134/shared/projeto/status"
 };
 
 const int TOTAL_TOPICOS_RECEBER = sizeof(TOPICOS_RECEBER) / sizeof(TOPICOS_RECEBER[0]);
@@ -60,32 +62,9 @@ const int TOTAL_TOPICOS_RECEBER = sizeof(TOPICOS_RECEBER) / sizeof(TOPICOS_RECEB
 
 const bool USE_AWS_IOT = true;
 
-const char* AWS_IOT_CLIENT_ID = "wario-134";
+const char* AWS_IOT_CLIENT_ID = "wario-13446";
 
 const char AWS_CERT_CA[] PROGMEM = R"EOF(
------BEGIN CERTIFICATE-----
-MIIDWTCCAkGgAwIBAgIUQEjBsoOieV8ly256I+ikppJQXE8wDQYJKoZIhvcNAQEL
-BQAwTTFLMEkGA1UECwxCQW1hem9uIFdlYiBTZXJ2aWNlcyBPPUFtYXpvbi5jb20g
-SW5jLiBMPVNlYXR0bGUgU1Q9V2FzaGluZ3RvbiBDPVVTMB4XDTI2MDUyMDIwMDMx
-M1oXDTQ5MTIzMTIzNTk1OVowHjEcMBoGA1UEAwwTQVdTIElvVCBDZXJ0aWZpY2F0
-ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKeQRe9e8qLgoVXG1BhU
-pfbUizV2SRWU8+qR14pnteGtiUdsvd7hQv5NPXgu177TFR+4hlnas1NiJdsw9AOb
-31MHywWxW2iYKxx2BEUhzOhPF+UPIBAJro+HE8F+mKQPyR37hRlxCqnftIJ7woXs
-h/f5GmZ93OvP9f0CII8sar4SbgIrnuys88qQPXDyby4PXlpHdgZzdjQOwxZVFkKU
-wj8fZY12v/RUKnTxetn6Tbc9C1rm9KdvrK9wNOmdGX1xYNPeRI7g+kMWTdcksgE3
-/cim4MPHhUs8eW17NbxcVwxwKbRrnVaWXib/xjhszuA/JOGsWcmA8ggKIiM48w2n
-VzkCAwEAAaNgMF4wHwYDVR0jBBgwFoAUBIVpP1/0DIPQ8KV5+xNpiljTfT8wHQYD
-VR0OBBYEFCSZpl6F5tMGme/I4Mnpzv5vdhVaMAwGA1UdEwEB/wQCMAAwDgYDVR0P
-AQH/BAQDAgeAMA0GCSqGSIb3DQEBCwUAA4IBAQAGZpsuVMfRNXTwVJthVa6NVVSU
-94JLNCVhSpmjJ/Qn2fbOgJzBQlY17KHFuworJbjenRsGKsnu+ZymyM0N6sPuT8uI
-z6MheTv6ZV/pPvt1DoJGeECD/Mz+95g2mYzwGsb3mFS7Phjq6+aQ/V2T+y1YMNk9
-UrtC55FGKro1qZMFEburFFDk3OCUC9DXvZKTsbqREP/VAgsfVj7/64zEmKj8RNY3
-WQj+2uP2SIWz8JdpHBfYdiwSb7xE0Vj0JykrX2rzfB7zfO0Ms7FxZ4CRx1EM2jCE
-LO2trrt/i7SXrj4vH2y1Sfp4yEAqIkkhYQLKp4cjzgxOtD7orzgZx6Ship6/
------END CERTIFICATE-----
-)EOF";
-
-const char AWS_CERT_CRT[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF
 ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6
@@ -105,6 +84,29 @@ N+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv
 o/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU
 5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy
 rqXRfboQnoZsG4q5WTP468SQvvG5
+-----END CERTIFICATE-----
+)EOF";
+
+const char AWS_CERT_CRT[] PROGMEM = R"EOF(
+-----BEGIN CERTIFICATE-----
+MIIDWTCCAkGgAwIBAgIUQEjBsoOieV8ly256I+ikppJQXE8wDQYJKoZIhvcNAQEL
+BQAwTTFLMEkGA1UECwxCQW1hem9uIFdlYiBTZXJ2aWNlcyBPPUFtYXpvbi5jb20g
+SW5jLiBMPVNlYXR0bGUgU1Q9V2FzaGluZ3RvbiBDPVVTMB4XDTI2MDUyMDIwMDMx
+M1oXDTQ5MTIzMTIzNTk1OVowHjEcMBoGA1UEAwwTQVdTIElvVCBDZXJ0aWZpY2F0
+ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKeQRe9e8qLgoVXG1BhU
+pfbUizV2SRWU8+qR14pnteGtiUdsvd7hQv5NPXgu177TFR+4hlnas1NiJdsw9AOb
+31MHywWxW2iYKxx2BEUhzOhPF+UPIBAJro+HE8F+mKQPyR37hRlxCqnftIJ7woXs
+h/f5GmZ93OvP9f0CII8sar4SbgIrnuys88qQPXDyby4PXlpHdgZzdjQOwxZVFkKU
+wj8fZY12v/RUKnTxetn6Tbc9C1rm9KdvrK9wNOmdGX1xYNPeRI7g+kMWTdcksgE3
+/cim4MPHhUs8eW17NbxcVwxwKbRrnVaWXib/xjhszuA/JOGsWcmA8ggKIiM48w2n
+VzkCAwEAAaNgMF4wHwYDVR0jBBgwFoAUBIVpP1/0DIPQ8KV5+xNpiljTfT8wHQYD
+VR0OBBYEFCSZpl6F5tMGme/I4Mnpzv5vdhVaMAwGA1UdEwEB/wQCMAAwDgYDVR0P
+AQH/BAQDAgeAMA0GCSqGSIb3DQEBCwUAA4IBAQAGZpsuVMfRNXTwVJthVa6NVVSU
+94JLNCVhSpmjJ/Qn2fbOgJzBQlY17KHFuworJbjenRsGKsnu+ZymyM0N6sPuT8uI
+z6MheTv6ZV/pPvt1DoJGeECD/Mz+95g2mYzwGsb3mFS7Phjq6+aQ/V2T+y1YMNk9
+UrtC55FGKro1qZMFEburFFDk3OCUC9DXvZKTsbqREP/VAgsfVj7/64zEmKj8RNY3
+WQj+2uP2SIWz8JdpHBfYdiwSb7xE0Vj0JykrX2rzfB7zfO0Ms7FxZ4CRx1EM2jCE
+LO2trrt/i7SXrj4vH2y1Sfp4yEAqIkkhYQLKp4cjzgxOtD7orzgZx6Ship6/
 -----END CERTIFICATE-----
 )EOF";
 
