@@ -23,11 +23,7 @@ const int PINO_HABILITA_DEBUG_COMPLETO = 4;
 const char* MQTT_BROKER = "a3cxr9ayydc4np-ats.iot.us-east-1.amazonaws.com";
 const int MQTT_PORTA = 8883;
 
-<<<<<<< HEAD
 const char* MQTT_CLIENT_ID = "wario-analise";
-=======
-const char* MQTT_CLIENT_ID = "wario-analise1";
->>>>>>> 308464108ca130d1c0711e4d5d3ad8c53f054dde
 
 const char* MQTT_USER = "kelvin";
 const char* MQTT_PASSWORD = "Senai@134";
@@ -42,15 +38,9 @@ const char MQTT_CERTIFICADO_CA[] PROGMEM = R"EOF()EOF";
 
 const char* TOPICOS_PUBLICAR[] = 
 {
-<<<<<<< HEAD
     "senai134/shared/projeto/TV",
     "senai134/shared/projeto/AC",
     "senai134/shared/projeto/telaRetratil",
-=======
-    "senai134/shared/projeto/yoshi",
-    "senai134/shared/projeto/AC",
-    "senai134/shared/projeto/TelaRetratil",
->>>>>>> 308464108ca130d1c0711e4d5d3ad8c53f054dde
     "senai134/shared/projeto/projetor09",
     "senai134/shared/projeto/projetor10"
 };

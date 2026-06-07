@@ -256,7 +256,7 @@ void configurarEventosNextion()
         serializeProjetor(estadoProjetor2, false); });
     projetorFreeze2.attachPop([](){
         projetorFreeze2.getValue(&estadoFreezeProjetor2);
-        serializeProjetor(false, &estadoFreezeProjetor2);});
+        serializeProjetor(false, estadoFreezeProjetor2);});
 
     //tela tv 7
     backTv.attachPop([](){ updateTela(0); });
@@ -460,7 +460,7 @@ void deserializeModuloAnalise(const String &mensagem)
 
     if (doc["analise"].is<JsonVariant>())
     {
-        if (!doc["analise"]["timestamp"].as<u_long>() || !doc["analise"]["temperatura"].as<float>() || !doc["analise"]["umidade"].as<float>() || doc["analise"]["ruido"].as<float>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["comandoAr"].as<int>() || doc["analise"]["alertaSom"].as<int>() || doc["analise"]["eco"].as<bool>())
+        if (doc["analise"]["timestamp"].isNull() || doc["analise"]["temperatura"].isNull() || doc["analise"]["umidade"].isNull() || doc["analise"]["ruido"].isNull() || doc["analise"]["comandoAr"].isNull() || doc["analise"]["comandoAr"].isNull() || doc["analise"]["alertaSom"].isNull() || doc["analise"]["eco"].isNull())
         {
             debugError("Json invalido");
             return;

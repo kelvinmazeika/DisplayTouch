@@ -4,6 +4,7 @@
 #include "DebugManager.h"
 #include "DisplayButtons.h"
 #include <ezTime.h>
+#include "secrets.h"
 
 String mensagemTv;
 String mensagemLuz;
@@ -54,7 +55,7 @@ void serializeTv(int comando)
     doc["televisao"]["comando"] = comando;
     doc["televisao"]["timestamp"] = tempo.now();
     serializeJson(doc, mensagemTv);
-    publishMessage("senai134/shared/projeto/yoshi", mensagemTv.c_str());
+    publishMessage(TOPICOS_PUBLICAR[TOPICO_TV], mensagemTv.c_str());
     debugInfo(mensagemTv);
 }
 

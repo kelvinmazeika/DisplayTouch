@@ -56,11 +56,7 @@ void tratarMensagemRecebida(const char* topico, const String& mensagem)
   debugInfo("Tópico: " + String(topico));
   debugInfo("Mensagem: " + mensagem);
 
-<<<<<<< HEAD
   if(strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_09]) == 0 || strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_10]) == 0)
-=======
-  if(strcmp(topico, "senai134/shared/projeto/analise09") == 0)
->>>>>>> 308464108ca130d1c0711e4d5d3ad8c53f054dde
   {
     deserializeModuloAnalise(mensagem);
     return;
