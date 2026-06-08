@@ -14,6 +14,7 @@ void addSalaExtra(int modulo);
 void removeSalaExtra(int modulo);
 
 void deserializeModuloAnalise(const String &mensagem);
+void deserializeModuloAnaliseB(const String &mensagem);
 
 void updateBotoesAc(bool confirmado);
 

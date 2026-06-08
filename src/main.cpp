@@ -56,9 +56,14 @@ void tratarMensagemRecebida(const char* topico, const String& mensagem)
   debugInfo("Tópico: " + String(topico));
   debugInfo("Mensagem: " + mensagem);
 
-  if(strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_09]) == 0 || strcmp(topico, TOPICOS_RECEBER[TOPICO_ANALISE_10]) == 0)
+  if(strcmp(topico, TOPICOS_RECEBER[1]) == 0)
   {
     deserializeModuloAnalise(mensagem);
+    return;
+  }
+  if(strcmp(topico, TOPICOS_RECEBER[2]) == 0)
+  {
+    deserializeModuloAnaliseB(mensagem);
     return;
   }
 

@@ -492,6 +492,51 @@ void deserializeModuloAnalise(const String &mensagem)
         textoAmbienteSensor.setText(buffer);
     }
 }
+void deserializeModuloAnaliseB(const String &mensagem)
+{
+    JsonDocument doc;
+    DeserializationError erro = deserializeJson(doc, mensagem);
+
+    if (erro)
+    {
+        debugError("Json inválido, corrigir formatação");
+        return;
+    }
+
+    if (doc["analise"].is<JsonVariant>())
+    {
+        if (doc["analise"]["timestamp"].isNull() || doc["analise"]["temperatura"].isNull() || doc["analise"]["umidade"].isNull() || doc["analise"]["ruido"].isNull() || doc["analise"]["comandoAr"].isNull() || doc["analise"]["comandoAr"].isNull() || doc["analise"]["alertaSom"].isNull() || doc["analise"]["eco"].isNull())
+        {
+            debugError("Json invalido");
+            return;
+        }
+    }
+    else
+    {
+        timeStampAnalise = doc["analise"]["timestamp"].as<u_long>();
+        temperatura = doc["analise"]["temperatura"].as<float>();
+        umidade = doc["analise"]["umidade"].as<float>();
+        ruido = doc["analise"]["ruido"].as<float>();
+        comandoAr = doc["analise"]["comandoAr"].as<int>();
+        alerta = doc["analise"]["alertaSom"].as<int>();
+        eco = doc["analise"]["eco"].as<bool>();
+
+        debugInfo("Analise desserializada com sucesso:");
+        debugInfo("Timestamp: " + String(timeStampAnalise));
+
+        sprintf(buffer, "%.1f", temperatura);
+        textoTempLadoB.setText(buffer);
+
+        sprintf(buffer, "%.1f", umidade);
+        textoUmidadeLadoB.setText(buffer);
+
+        sprintf(buffer, "%.1f", ruido);
+        textoRuidoLadoB.setText(buffer);
+
+        sprintf(buffer, "%s", alerta ? "Alerta!" : "Normal");
+        textoAmbienteSensor.setText(buffer);
+    }
+}
 
 void updateBotoesAc(bool confirmado)
 {
