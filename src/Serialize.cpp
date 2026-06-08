@@ -29,13 +29,13 @@ void serializeAc(bool estado, int temp, int modo, int vento)
         {
             if (i == 0 || i == 1)
             {
-                doc["ar-condicionado"]["esp"] = 0;
-                doc["ar-condicionado"]["id_ar"] = i;
+                doc["ar-condicionado"]["esp"] = 1;
+                doc["ar-condicionado"]["id_ar"] = i+1;
             }
             else if (i == 2 || i == 3)
             {
-                doc["ar-condicionado"]["esp"] = 1;
-                doc["ar-condicionado"]["id_ar"] = i;
+                doc["ar-condicionado"]["esp"] = 2;
+                doc["ar-condicionado"]["id_ar"] = i+1;
             }
             doc["ar-condicionado"]["estado"] = estado;
             doc["ar-condicionado"]["temperatura"] = temp;
@@ -53,7 +53,7 @@ void serializeTv(int comando)
 {
     JsonDocument doc;
     doc["televisao"]["comando"] = comando;
-    doc["televisao"]["timestamp"] = tempo.now();
+    doc["televisao"]["hora"] = tempo.now();
     serializeJson(doc, mensagemTv);
     publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
     debugInfo(mensagemTv);

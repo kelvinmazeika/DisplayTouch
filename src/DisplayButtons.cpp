@@ -111,15 +111,15 @@ NexDSButton selecionarProjetorB(6, 10, "bt3");
 //tela tv 7
 NexButton backTv(7, 2, "b0");
 
-NexButton returnTv(7, 3, "b1");
-NexButton aumentarVolumeTv(7, 4, "b2");
-NexButton diminuirVolumeTv(7, 5, "b3");
-NexButton dPadUpTv(7, 6, "b4");
-NexButton dPadDownTv(7, 7, "b5");
-NexButton dPadLeftTv(7, 8, "b6");
-NexButton dPadRightTv(7, 9, "b7");
-NexButton dPadSelectTv(7, 10, "b8");
-NexDSButton botaoTvOnOff(7, 11, "bt0");
+NexButton returnTv(7, 4, "b1");
+NexButton aumentarVolumeTv(7, 5, "b2");
+NexButton diminuirVolumeTv(7, 6, "b3");
+NexButton dPadUpTv(7, 7, "b4");
+NexButton dPadDownTv(7, 8, "b5");
+NexButton dPadLeftTv(7, 9, "b6");
+NexButton dPadRightTv(7, 10, "b7");
+NexButton dPadSelectTv(7, 11, "b8");
+NexDSButton botaoTvOnOff(7, 3, "bt0");
 
 //tela sensor 8
 NexButton backSensor(8, 2, "b0");

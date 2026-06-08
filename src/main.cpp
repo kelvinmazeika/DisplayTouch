@@ -24,7 +24,7 @@ void setup()
   configurarNextion();
   configurarTelaInicial();
   configurarEventosNextion();
-  //iniciaTimestamp();
+  iniciaTimestamp();
   delay(1000);
 
   Serial.println();
