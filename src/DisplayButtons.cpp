@@ -6,6 +6,9 @@ bool luzSalaExtra = 0;
 bool arSalaExtra = 0;
 bool projSalaExtra = 0;
 
+uint32_t estadoProj[2] = {0, 0}; 
+uint32_t estadoProjFreeze[2] = {0, 0};
+
 uint32_t projetoresSelecionados[2] = {0, 0};
 
 uint32_t acSelecionados[4] = {0, 0, 0, 0};

@@ -7,6 +7,9 @@
 extern bool luzSalaExtra;
 extern bool arSalaExtra;
 extern bool projSalaExtra;
+extern uint32_t estadoProj[2]; 
+extern uint32_t estadoProjFreeze[2]; 
+
 
 extern uint32_t acSelecionados[4];
 

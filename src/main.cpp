@@ -10,7 +10,7 @@
 #include "Serialize.h"
 #include "secrets.h"
 
-void tratarMensagemRecebida(const char *topico, const String &mensagem);
+void tratarMensagemRecebida(const char* topico, const String& mensagem);
 
 void setup()
 {
@@ -56,12 +56,12 @@ void tratarMensagemRecebida(const char* topico, const String& mensagem)
   debugInfo("Tópico: " + String(topico));
   debugInfo("Mensagem: " + mensagem);
 
-  if(strcmp(topico, TOPICOS_RECEBER[1]) == 0)
+  if(strcmp(topico, TOPICOS_RECEBER[0]) == 0)
   {
     deserializeModuloAnalise(mensagem);
     return;
   }
-  if(strcmp(topico, TOPICOS_RECEBER[2]) == 0)
+  if(strcmp(topico, TOPICOS_RECEBER[1]) == 0)
   {
     deserializeModuloAnaliseB(mensagem);
     return;

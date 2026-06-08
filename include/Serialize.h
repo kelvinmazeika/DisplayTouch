@@ -21,7 +21,7 @@
 
 void iniciaTimestamp();
 
-void serializeProjetor(int power, bool congelamento);
+void serializeProjetor(int power, int congelamento);
 
 void serializeAc(bool estado, int temp, int modo, int vento); //Verificar JSON e terminar de preencher parametros
 
@@ -30,6 +30,7 @@ void serializeLampada(int sala, bool lampadaFrente, int estadoLampada);
 void serializeTelaRetratil(bool up, bool down, bool pause);
 
 void onOffTodasLuzes(bool estadoLuzes);
+
 
 
 #endif

@@ -127,7 +127,7 @@ void onOffTodasLuzes(bool estadoLuzes)
     debugInfo(mensagemLuz);
 }
 
-void serializeProjetor(int power, bool congelamento)
+void serializeProjetor(int power, int congelamento)
 {
     JsonDocument doc;
 

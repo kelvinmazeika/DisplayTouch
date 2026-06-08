@@ -237,11 +237,11 @@ void configurarEventosNextion()
     telaRetratilStop1.attachPop([](){ serializeTelaRetratil(0, 0, 1); });
     telaRetratilDown1.attachPop([](){ serializeTelaRetratil(0, 1, 0); });
     projetorOnOff1.attachPop([](){
-        projetorOnOff1.getValue(&estadoProjetor);
-        serializeProjetor(estadoProjetor, false); });
+        projetorOnOff1.getValue(&estadoProj[0]);
+        serializeProjetor(estadoProj[0], estadoProjFreeze[0]); });
     projetorFreeze1.attachPop([](){
-        projetorFreeze1.getValue(&estadoFreezeProjetor);
-        serializeProjetor(false, estadoFreezeProjetor); });
+        projetorFreeze1.getValue(&estadoProjFreeze[0]);
+        serializeProjetor(estadoProj[0], estadoProjFreeze[0]); });
     backProj2.attachPop([](){ updateTela(0); });
     removerSalaExtraProj.attachPop([](){ removeSalaExtra(2); });
     selecionarProjetorA.attachPop([](){
@@ -252,11 +252,11 @@ void configurarEventosNextion()
     telaRetratilStop2.attachPop([](){ serializeTelaRetratil(0, 0, 1); });
     telaRetratilDown2.attachPop([](){ serializeTelaRetratil(0, 1, 0); });
     projetorOnOff2.attachPop([](){
-        projetorOnOff2.getValue(&estadoProjetor2);
-        serializeProjetor(estadoProjetor2, false); });
+        projetorOnOff2.getValue(&estadoProj[1]);
+        serializeProjetor(estadoProj[1], estadoProjFreeze[1]); });
     projetorFreeze2.attachPop([](){
-        projetorFreeze2.getValue(&estadoFreezeProjetor2);
-        serializeProjetor(false, estadoFreezeProjetor2);});
+        projetorFreeze2.getValue(&estadoProjFreeze[1]);
+        serializeProjetor(estadoProj[1], estadoProjFreeze[1]);});
 
     //tela tv 7
     backTv.attachPop([](){ updateTela(0); });
