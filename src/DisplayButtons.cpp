@@ -6,6 +6,19 @@ bool luzSalaExtra = 0;
 bool arSalaExtra = 0;
 bool projSalaExtra = 0;
 
+#include <Preferences.h>
+
+Preferences prefs;
+
+void carregarPreferencias()
+{
+    prefs.begin("config", false);
+    luzSalaExtra  = prefs.getBool("luzExtra",  false);
+    arSalaExtra   = prefs.getBool("arExtra",   false);
+    projSalaExtra = prefs.getBool("projExtra", false);
+    prefs.end();
+}
+
 uint32_t estadoProj[2] = {0, 0}; 
 uint32_t estadoProjFreeze[2] = {0, 0};
 

@@ -3,6 +3,10 @@
 #include <Nextion.h>
 #include <Arduino.h>
 #include <ezTime.h>
+#include <Preferences.h>
+
+extern Preferences prefs;
+void carregarPreferencias();
 
 extern bool luzSalaExtra;
 extern bool arSalaExtra;

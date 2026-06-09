@@ -21,22 +21,27 @@ void iniciaTimestamp()
 
 void serializeAc(bool estado, int temp, int modo, int vento)
 {
-    JsonDocument doc;
+    if (acSelecionados[0] == 1 && acSelecionados[1] == 1 && acSelecionados[2] == 1 && acSelecionados[3] == 1)
+    {
+        JsonDocument doc;
+        doc["ar-condicionado"]["esp"] = 0;
+        doc["ar-condicionado"]["estado"] = estado;
+        doc["ar-condicionado"]["temperatura"] = temp;
+        doc["ar-condicionado"]["modo"] = modo;
+        doc["ar-condicionado"]["vento"] = vento;
+        doc["timestamp"] = tempo.now();
+        serializeJson(doc, mensagemAC);
+        publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
+        return;
+    }
 
     for (int i = 0; i < 4; i++)
     {
         if (acSelecionados[i] == 1)
         {
-            if (i == 0 || i == 1)
-            {
-                doc["ar-condicionado"]["esp"] = 1;
-                doc["ar-condicionado"]["id_ar"] = i+1;
-            }
-            else if (i == 2 || i == 3)
-            {
-                doc["ar-condicionado"]["esp"] = 2;
-                doc["ar-condicionado"]["id_ar"] = i+1;
-            }
+            JsonDocument doc;
+            doc["ar-condicionado"]["esp"] = (i < 2) ? 1 : 2;
+            doc["ar-condicionado"]["id_ar"] = i;
             doc["ar-condicionado"]["estado"] = estado;
             doc["ar-condicionado"]["temperatura"] = temp;
             doc["ar-condicionado"]["modo"] = modo;
@@ -53,7 +58,7 @@ void serializeTv(int comando)
 {
     JsonDocument doc;
     doc["televisao"]["comando"] = comando;
-    doc["televisao"]["hora"] = tempo.now();
+    doc["televisao"]["timestamp"] = tempo.now();
     serializeJson(doc, mensagemTv);
     publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
     debugInfo(mensagemTv);
@@ -65,71 +70,46 @@ void serializeLampada(int sala, bool lampadaFrente, int estadoLampada)
     if (sala == 9)
     {
         if (lampadaFrente)
-        {
             doc["lampadaSala09"]["interruptor1"] = estadoLampada;
-            doc["timestamp"] = tempo.now();
-        }
         else
-        {
             doc["lampadaSala09"]["interruptor2"] = estadoLampada;
-            doc["timestamp"] = tempo.now();
-        }
     }
     else if (sala == 10)
     {
         if (lampadaFrente)
-        {
             doc["lampadaSala10"]["interruptor3"] = estadoLampada;
-            doc["timestamp"] = tempo.now();
-        }
         else
-        {
             doc["lampadaSala10"]["interruptor4"] = estadoLampada;
-            doc["timestamp"] = tempo.now();
-        }
     }
-
+    doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemLuz);
-    debugInfo(mensagemLuz);
     publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+    debugInfo(mensagemLuz);
 }
 
 void onOffTodasLuzes(bool estadoLuzes)
 {
     JsonDocument doc;
-
-    if (!luzSalaExtra)
+    doc["lampadaSala09"]["interruptor1"] = estadoLuzes;
+    doc["lampadaSala09"]["interruptor2"] = estadoLuzes;
+    if (luzSalaExtra)
     {
-
-        doc["lampadaSala09"]["interruptor1"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
-
-        doc["lampadaSala09"]["interruptor2"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
-    }
-    else
-    {
-        doc["lampadaSala09"]["interruptor1"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
-
-        doc["lampadaSala09"]["interruptor2"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
-
         doc["lampadaSala10"]["interruptor3"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
-
         doc["lampadaSala10"]["interruptor4"] = estadoLuzes;
-        doc["timestamp"] = tempo.now();
     }
-
+    doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemLuz);
     publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
     debugInfo(mensagemLuz);
 }
 
-void serializeProjetor(int power, int congelamento)
+void serializeProjetor(int power, bool congelamento)
 {
     JsonDocument doc;
+    doc["projetor"]["estadoPower"] = power;
+    doc["projetor"]["estadoCongelamento"] = congelamento;
+    serializeJson(doc, mensagemProj);
+    debugInfo(mensagemProj);
 
     if (projSalaExtra)
     {
@@ -137,44 +117,35 @@ void serializeProjetor(int power, int congelamento)
         {
             if (projetoresSelecionados[i] == 1)
             {
-                doc["projetor"]["estadoPower"] = power;
-                doc["projetor"]["estadoCongelamento"] = congelamento;
-                serializeJson(doc, mensagemProj);
-                debugInfo(mensagemProj);
+
                 if (i == 0)
                     publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
-                else if (i == 1)
+                else
                     publicarMensagemNoTopico(TOPICO_PROJ_10, mensagemProj.c_str());
             }
         }
     }
     else
     {
-        doc["projetor"]["estadoPower"] = power;
-        doc["projetor"]["estadoCongelamento"] = congelamento;
-        serializeJson(doc, mensagemProj);
         publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
-        debugInfo(mensagemProj);
     }
 }
 
 void serializeTelaRetratil(bool up, bool down, bool pause)
 {
-    JsonDocument doc;
-
     if (projSalaExtra)
     {
         for (int i = 0; i < 2; i++)
         {
             if (projetoresSelecionados[i] == 1)
             {
+                JsonDocument doc;
                 doc["telaRetratil"]["tela"] = i;
                 doc["telaRetratil"]["UP"] = up;
                 doc["telaRetratil"]["PAUSE"] = pause;
                 doc["telaRetratil"]["DOWN"] = down;
                 doc["telaRetratil"]["timestamp"] = tempo.now();
                 doc["telaRetratil"]["tempo"] = tempo.dateTime();
-
                 serializeJson(doc, mensagemTela);
                 publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
                 debugInfo(mensagemTela);
@@ -183,13 +154,13 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
     }
     else
     {
+        JsonDocument doc;
         doc["telaRetratil"]["tela"] = 0;
         doc["telaRetratil"]["UP"] = up;
         doc["telaRetratil"]["PAUSE"] = pause;
         doc["telaRetratil"]["DOWN"] = down;
         doc["telaRetratil"]["timestamp"] = tempo.now();
         doc["telaRetratil"]["tempo"] = tempo.dateTime();
-
         serializeJson(doc, mensagemTela);
         publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
         debugInfo(mensagemTela);

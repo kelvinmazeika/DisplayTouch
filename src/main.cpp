@@ -9,6 +9,8 @@
 #include "NextionManager.h"
 #include "Serialize.h"
 #include "secrets.h"
+#include "DisplayButtons.h"
+#include "QosManager.h"
 
 void tratarMensagemRecebida(const char* topico, const String& mensagem);
 
@@ -21,6 +23,7 @@ void setup()
   registerCallbackMessage(tratarMensagemRecebida);
   connectToMQTT();
 
+  carregarPreferencias();
   configurarNextion();
   configurarTelaInicial();
   configurarEventosNextion();
@@ -38,7 +41,9 @@ void loop()
   grantMQTTConnection();
   grantWiFiAccess();
   nexLoop();
-  //events();
+  loopMQTT();
+  events();
+  qosLoop();
 }
 
 void tratarMensagemRecebida(const char* topico, const String& mensagem)
