@@ -145,4 +145,4 @@ NexText textoRuidoLadoB(8, 9, "t6");
 NexText textoAmbienteSensor(8, 6, "t3");
 
 //tela settings 9
-NexButton backSettings(9, 2, "b0");
+NexButton backSettings(9, 4, "b0");

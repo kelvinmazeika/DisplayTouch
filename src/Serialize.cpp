@@ -1,10 +1,10 @@
 #include "Serialize.h"
 #include <ArduinoJson.h>
-#include "MqttManager.h"
 #include "DebugManager.h"
 #include "DisplayButtons.h"
 #include <ezTime.h>
 #include "secrets.h"
+#include <ESP32Connectivity.h>
 
 String mensagemTv;
 String mensagemLuz;
@@ -31,7 +31,7 @@ void serializeAc(bool estado, int temp, int modo, int vento)
         doc["ar-condicionado"]["vento"] = vento;
         doc["timestamp"] = tempo.now();
         serializeJson(doc, mensagemAC);
-        publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
+        conectividade.publicar(TOPICO_AC, mensagemAC.c_str());
         return;
     }
 
@@ -48,7 +48,7 @@ void serializeAc(bool estado, int temp, int modo, int vento)
             doc["ar-condicionado"]["vento"] = vento;
             doc["timestamp"] = tempo.now();
             serializeJson(doc, mensagemAC);
-            publicarMensagemNoTopico(TOPICO_AC, mensagemAC.c_str());
+            conectividade.publicar(TOPICO_AC, mensagemAC.c_str());
             debugInfo(mensagemAC);
         }
     }
@@ -60,7 +60,7 @@ void serializeTv(int comando)
     doc["televisao"]["comando"] = comando;
     doc["televisao"]["timestamp"] = tempo.now();
     serializeJson(doc, mensagemTv);
-    publicarMensagemNoTopico(TOPICO_TV, mensagemTv.c_str());
+    conectividade.publicar(TOPICO_TV, mensagemTv.c_str());
     debugInfo(mensagemTv);
 }
 
@@ -83,7 +83,7 @@ void serializeLampada(int sala, bool lampadaFrente, int estadoLampada)
     }
     doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemLuz);
-    publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+    conectividade.publicar(TOPICO_LAMP, mensagemLuz.c_str());
     debugInfo(mensagemLuz);
 }
 
@@ -99,11 +99,11 @@ void onOffTodasLuzes(bool estadoLuzes)
     }
     doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemLuz);
-    publicarMensagemNoTopico(TOPICO_LAMP, mensagemLuz.c_str());
+    conectividade.publicar(TOPICO_LAMP, mensagemLuz.c_str());
     debugInfo(mensagemLuz);
 }
 
-void serializeProjetor(int power, bool congelamento)
+void serializeProjetor(int power, int congelamento)
 {
     JsonDocument doc;
     doc["projetor"]["estadoPower"] = power;
@@ -119,15 +119,15 @@ void serializeProjetor(int power, bool congelamento)
             {
 
                 if (i == 0)
-                    publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
+                    conectividade.publicar(TOPICO_PROJ_09, mensagemProj.c_str());
                 else
-                    publicarMensagemNoTopico(TOPICO_PROJ_10, mensagemProj.c_str());
+                    conectividade.publicar(TOPICO_PROJ_10, mensagemProj.c_str());
             }
         }
     }
     else
     {
-        publicarMensagemNoTopico(TOPICO_PROJ_09, mensagemProj.c_str());
+        conectividade.publicar(TOPICO_PROJ_09, mensagemProj.c_str());
     }
 }
 
@@ -147,7 +147,7 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
                 doc["telaRetratil"]["timestamp"] = tempo.now();
                 doc["telaRetratil"]["tempo"] = tempo.dateTime();
                 serializeJson(doc, mensagemTela);
-                publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
+                conectividade.publicar(TOPICO_TELA, mensagemTela.c_str());
                 debugInfo(mensagemTela);
             }
         }
@@ -162,7 +162,7 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
         doc["telaRetratil"]["timestamp"] = tempo.now();
         doc["telaRetratil"]["tempo"] = tempo.dateTime();
         serializeJson(doc, mensagemTela);
-        publicarMensagemNoTopico(TOPICO_TELA, mensagemTela.c_str());
+        conectividade.publicar(TOPICO_TELA, mensagemTela.c_str());
         debugInfo(mensagemTela);
     }
 }

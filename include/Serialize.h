@@ -2,8 +2,6 @@
 #define SERIALIZE_H
 
 #include <Arduino.h>
-#include <ezTime.h>
-#include "MqttManager.h"
 
 
 #define TOPICO_ANALISE_09 0

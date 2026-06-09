@@ -4,7 +4,7 @@
 #include "NextionManager.h"
 #include "Serialize.h"
 #include <ArduinoJson.h>
-#include <DebugManager.h>
+#include "DebugManager.h"
 
 // =========================================================
 // Variaveis de estado dos módulos e da tela
@@ -299,9 +299,9 @@ void configurarEventosNextion()
     removerSalaExtraProj.attachPop([]()
                                    { removeSalaExtra(2); });
     selecionarProjetorA.attachPop([]()
-                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); });
+                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); Serial.printf("Projetor A:%d", projetoresSelecionados[0]);});
     selecionarProjetorB.attachPop([]()
-                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); });
+                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]);});
     telaRetratilUp2.attachPop([]()
                               { serializeTelaRetratil(1, 0, 0); });
     telaRetratilStop2.attachPop([]()
@@ -423,6 +423,8 @@ void configurarEventosNextion()
     nexListen(dPadSelectTv);
     nexListen(backSensor);
     nexListen(backSettings);
+    nexListen(selecionarProjetorB);
+    nexListen(selecionarProjetorA);
 }
 
 void updateTela(int modulo)
@@ -481,7 +483,7 @@ void addSalaExtra(int modulo)
         break;
     }
     prefs.end();
-    updateTela(modulo);
+    updateTela(modulo + 1);
 }
 
 void removeSalaExtra(int modulo)
@@ -503,7 +505,7 @@ void removeSalaExtra(int modulo)
         break;
     }
     prefs.end();
-    updateTela(modulo);
+    updateTela(modulo + 1);
 }
 
 void deserializeModuloAnalise(const String &mensagem)
@@ -512,23 +514,20 @@ void deserializeModuloAnalise(const String &mensagem)
     DeserializationError erro = deserializeJson(doc, mensagem);
     if (erro)
     {
-        debugError("Json inválido");
+        debugErro("Json inválido");
         return;
     }
 
     if (!doc["analise"].is<JsonObject>())
     {
-        debugError("Campo 'analise' ausente no JSON");
+        debugErro("Campo 'analise' ausente no JSON");
         return;
     }
 
     JsonObject analise = doc["analise"];
-    if (analise["timestamp"].isNull() || analise["temperatura"].isNull() ||
-        analise["umidade"].isNull() || analise["ruido"].isNull() ||
-        analise["comandoAr"].isNull() || analise["alertaSom"].isNull() ||
-        analise["eco"].isNull())
+    if (analise["timestamp"].isNull())
     {
-        debugError("Json incompleto — campo ausente");
+        debugErro("Json incompleto — campo ausente");
         return;
     }
 
@@ -561,23 +560,20 @@ void deserializeModuloAnaliseB(const String &mensagem)
     DeserializationError erro = deserializeJson(doc, mensagem);
     if (erro)
     {
-        debugError("Json inválido");
+        debugErro("Json inválido");
         return;
     }
 
     if (!doc["analise"].is<JsonObject>())
     {
-        debugError("Campo 'analise' ausente no JSON");
+        debugErro("Campo 'analise' ausente no JSON");
         return;
     }
 
     JsonObject analise = doc["analise"];
-    if (analise["timestamp"].isNull() || analise["temperatura"].isNull() ||
-        analise["umidade"].isNull() || analise["ruido"].isNull() ||
-        analise["comandoAr"].isNull() || analise["alertaSom"].isNull() ||
-        analise["eco"].isNull())
+    if (analise["timestamp"].isNull())
     {
-        debugError("Json incompleto — campo ausente");
+        debugErro("Json incompleto — campo ausente");
         return;
     }
 

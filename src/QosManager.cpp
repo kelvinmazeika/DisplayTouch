@@ -1,6 +1,6 @@
 // QosManager.cpp
 #include "QosManager.h"
-#include "MqttManager.h"
+#include <ESP32Connectivity.h>
 #include "DebugManager.h"
 
 #define QOS_MAX_TENTATIVAS 4
@@ -17,7 +17,7 @@ void qosPublicar(const char *topico, const char *payload, u_long timestamp)
 {
     if (mensagemPendente)
     {
-        debugError("QoS: ainda aguardando confirmacao da mensagem anterior");
+        debugErro("QoS: ainda aguardando confirmacao da mensagem anterior");
         return;
     }
 
@@ -28,7 +28,7 @@ void qosPublicar(const char *topico, const char *payload, u_long timestamp)
     mensagemUltimoEnvio = millis();
     mensagemPendente = true;
 
-    publishMessage(topico, payload);
+    conectividade.publicar(topico, payload);
     debugInfo("QoS: enviando (tentativa 1) ts=" + String(timestamp));
 }
 
@@ -36,13 +36,13 @@ void qosConfirmar(u_long timestamp)
 {
     if (!mensagemPendente)
     {
-        debugError("QoS: confirmacao recebida mas nao havia mensagem pendente");
+        debugErro("QoS: confirmacao recebida mas nao havia mensagem pendente");
         return;
     }
 
     if (mensagemTimestamp != timestamp)
     {
-        debugError("QoS: timestamp errado, esperava " + String(mensagemTimestamp) +
+        debugErro("QoS: timestamp errado, esperava " + String(mensagemTimestamp) +
                    " mas recebeu " + String(timestamp));
         return;
     }
@@ -63,16 +63,16 @@ void qosLoop()
 
     if (mensagemTentativas >= QOS_MAX_TENTATIVAS)
     {
-        debugError("QoS: falha apos " + String(QOS_MAX_TENTATIVAS) + " tentativas");
-        debugError("QoS: topico=" + mensagemTopico);
-        debugError("QoS: payload=" + mensagemPayload);
+        debugErro("QoS: falha apos " + String(QOS_MAX_TENTATIVAS) + " tentativas");
+        debugErro("QoS: topico=" + mensagemTopico);
+        debugErro("QoS: payload=" + mensagemPayload);
         mensagemPendente = false;
         return;
     }
 
     mensagemTentativas++;
     mensagemUltimoEnvio = agora;
-    publishMessage(mensagemTopico.c_str(), mensagemPayload.c_str());
+    conectividade.publicar(mensagemTopico.c_str(), mensagemPayload.c_str());
     debugInfo("QoS: reenvio (tentativa " + String(mensagemTentativas) +
               ") ts=" + String(mensagemTimestamp));
 }

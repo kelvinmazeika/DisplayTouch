@@ -2,9 +2,8 @@
 #include <ArduinoJson.h>
 #include <Adafruit_NeoPixel.h>
 #include <ezTime.h>
+#include "ESP32Connectivity.h"
 
-#include "WiFiManager.h"
-#include "MqttManager.h"
 #include "DebugManager.h"
 #include "NextionManager.h"
 #include "Serialize.h"
@@ -12,16 +11,27 @@
 #include "DisplayButtons.h"
 #include "QosManager.h"
 
-void tratarMensagemRecebida(const char* topico, const String& mensagem);
+ConfigAWS aws = {
+    AWS_IOT_ENDPOINT,
+    AWS_IOT_PORT,
+    AWS_IOT_CLIENT_ID,
+    AWS_CERT_CA, AWS_CERT_CRT, AWS_CERT_PRIVATE};
+
+ConfigWiFi wifi = {ssid, password};
+
+ConfigTopicos topicos = {
+    TOPICOS_PUBLICAR, 6,
+    TOPICOS_RECEBER, 3};
+
+void tratarMensagemRecebida(const char *topico, const String &mensagem);
 
 void setup()
 {
-  configDebug();
+  configurarDebug();
 
-  connectToWifi();
-  configureMQTT();
-  registerCallbackMessage(tratarMensagemRecebida);
-  connectToMQTT();
+  conectividade.configurarBufferMQTT(1024);
+  conectividade.beginAWS(wifi, aws, topicos);
+  conectividade.registrarCallbackMensagem([](const char* topico, const String& msg) {tratarMensagemRecebida(topico, msg);});
 
   carregarPreferencias();
   configurarNextion();
@@ -38,40 +48,31 @@ void setup()
 
 void loop()
 {
-  grantMQTTConnection();
-  grantWiFiAccess();
-  nexLoop();
-  loopMQTT();
+  conectividade.update();
   events();
   qosLoop();
+  nexLoop();
 }
 
-void tratarMensagemRecebida(const char* topico, const String& mensagem)
+void tratarMensagemRecebida(const char *topico, const String &mensagem)
 {
-  debugInfo("==============================");
-  debugInfo("Mensagem recebida na aplicação");
-  debugInfo("==============================");
-  
-  if(topico == nullptr)
+
+  if (topico == nullptr)
   {
-    debugError("Tópico MQTT inválido");
+    debugErro("Tópico MQTT inválido");
     return;
   }
-  
-  debugInfo("Tópico: " + String(topico));
-  debugInfo("Mensagem: " + mensagem);
 
-  if(strcmp(topico, TOPICOS_RECEBER[0]) == 0)
+  if (strcmp(topico, TOPICOS_RECEBER[0]) == 0)
   {
     deserializeModuloAnalise(mensagem);
     return;
   }
-  if(strcmp(topico, TOPICOS_RECEBER[1]) == 0)
+  if (strcmp(topico, TOPICOS_RECEBER[1]) == 0)
   {
     deserializeModuloAnaliseB(mensagem);
     return;
   }
 
-  debugError("Tópico não tratado: " + String(topico));
-
+  debugErro("Tópico não tratado: " + String(topico));
 }
