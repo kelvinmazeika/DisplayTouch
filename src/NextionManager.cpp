@@ -137,9 +137,19 @@ void configurarEventosNextion()
     botaoAcOnOff.attachPop([]()
                            { botaoAcOnOff.getValue(&estadoAc); });
     aumentarTempAc1.attachPop([]()
-                              {temperaturaAc++;if(temperaturaAc > 30) temperaturaAc = 30;const char* tempStr = String(temperaturaAc).c_str(); textoTemp1.setText(tempStr); });
+                              {
+    temperaturaAc++;
+    if (temperaturaAc > 30) temperaturaAc = 30;
+    char bufTemp[8];
+    sprintf(bufTemp, "%d", temperaturaAc);
+    textoTemp1.setText(bufTemp); });
     diminuirTempAc1.attachPop([]()
-                              {temperaturaAc--;if(temperaturaAc < 16) temperaturaAc = 16;const char* tempStr = String(temperaturaAc).c_str(); textoTemp1.setText(tempStr); });
+                              {
+    temperaturaAc--;
+    if (temperaturaAc < 16) temperaturaAc = 16;
+    char bufTemp[8];
+    sprintf(bufTemp, "%d", temperaturaAc);
+    textoTemp1.setText(bufTemp); });
     modoCoolAc1.attachPop([]()
                           {
         modoCoolAc1.getValue(&modoAc);
@@ -194,10 +204,20 @@ void configurarEventosNextion()
                              { selecionarAcD2.getValue(&acSelecionados[3]); });
     botaoAcOnOff2.attachPop([]()
                             { botaoAcOnOff2.getValue(&estadoAc); });
-    aumentarTempAc2.attachPop([]()
-                              {temperaturaAc++;if(temperaturaAc > 30) temperaturaAc = 30;const char* tempStr = String(temperaturaAc).c_str(); textoTemp2.setText(tempStr); });
-    diminuirTempAc2.attachPop([]()
-                              {temperaturaAc--;if(temperaturaAc < 16) temperaturaAc = 16;const char* tempStr = String(temperaturaAc).c_str(); textoTemp2.setText(tempStr); });
+    aumentarTempAc2.attachPop([](){
+    temperaturaAc++;
+    if (temperaturaAc > 30) temperaturaAc = 30;
+    char bufTemp[8];
+    sprintf(bufTemp, "%d", temperaturaAc);
+    textoTemp2.setText(bufTemp);
+});
+diminuirTempAc2.attachPop([](){
+    temperaturaAc--;
+    if (temperaturaAc < 16) temperaturaAc = 16;
+    char bufTemp[8];
+    sprintf(bufTemp, "%d", temperaturaAc);
+    textoTemp2.setText(bufTemp);
+});
     modoCoolAc2.attachPop([]()
                           {
         modoCoolAc2.getValue(&modoAc);
@@ -299,9 +319,9 @@ void configurarEventosNextion()
     removerSalaExtraProj.attachPop([]()
                                    { removeSalaExtra(2); });
     selecionarProjetorA.attachPop([]()
-                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); Serial.printf("Projetor A:%d", projetoresSelecionados[0]);});
+                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); Serial.printf("Projetor A:%d", projetoresSelecionados[0]); });
     selecionarProjetorB.attachPop([]()
-                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]);});
+                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]); });
     telaRetratilUp2.attachPop([]()
                               { serializeTelaRetratil(1, 0, 0); });
     telaRetratilStop2.attachPop([]()
@@ -541,17 +561,19 @@ void deserializeModuloAnalise(const String &mensagem)
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
-    sprintf(buffer, "%.1f", temperatura);
-    textoTempLadoA.setText(buffer);
+    char buf[20];
 
-    sprintf(buffer, "%.1f", umidade);
-    textoUmidadeLadoA.setText(buffer);
+    sprintf(buf, "%.1f", temperatura);
+    textoTempLadoA.setText(buf);
 
-    sprintf(buffer, "%.1f", ruido);
-    textoRuidoLadoA.setText(buffer);
+    sprintf(buf, "%.1f", umidade);
+    textoUmidadeLadoA.setText(buf);
 
-    sprintf(buffer, "%s", alerta ? "Alerta!" : "Normal");
-    textoAmbienteSensor.setText(buffer);
+    sprintf(buf, "%.1f", ruido);
+    textoRuidoLadoA.setText(buf);
+
+    sprintf(buf, "%s", alerta ? "Alerta!" : "Normal");
+    textoAmbienteSensor.setText(buf);
 }
 
 void deserializeModuloAnaliseB(const String &mensagem)
@@ -587,17 +609,19 @@ void deserializeModuloAnaliseB(const String &mensagem)
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
-    sprintf(buffer, "%.1f", temperatura);
-    textoTempLadoB.setText(buffer);
+    char buf[20];
 
-    sprintf(buffer, "%.1f", umidade);
-    textoUmidadeLadoB.setText(buffer);
+    sprintf(buf, "%.1f", temperatura);
+    textoTempLadoB.setText(buf);
 
-    sprintf(buffer, "%.1f", ruido);
-    textoRuidoLadoB.setText(buffer);
+    sprintf(buf, "%.1f", umidade);
+    textoUmidadeLadoB.setText(buf);
 
-    sprintf(buffer, "%s", alerta ? "Alerta!" : "Normal");
-    textoAmbienteSensor.setText(buffer);
+    sprintf(buf, "%.1f", ruido);
+    textoRuidoLadoB.setText(buf);
+
+    sprintf(buf, "%s", alerta ? "Alerta!" : "Normal");
+    textoAmbienteSensor.setText(buf);
 }
 
 void updateBotoesAc(bool confirmado)

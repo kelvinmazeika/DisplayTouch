@@ -9,7 +9,6 @@
 #include "Serialize.h"
 #include "secrets.h"
 #include "DisplayButtons.h"
-#include "QosManager.h"
 
 ConfigAWS aws = {
     AWS_IOT_ENDPOINT,
@@ -50,7 +49,6 @@ void loop()
 {
   conectividade.update();
   events();
-  qosLoop();
   nexLoop();
 }
 
