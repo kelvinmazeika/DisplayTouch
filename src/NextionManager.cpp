@@ -15,19 +15,23 @@ uint8_t acaoTv;
 uint32_t estadoLuzes[2][2] = {{0, 0}, {0, 0}};
 int tela = 0;
 
-float temperatura;
-float umidade;
-float ruido;
+float temperaturaA;
+float umidadeA;
+float ruidoA;
+int alertaA;
+float temperaturaB;
+float umidadeB;
+float ruidoB;
+int alertaB;
 int comandoAr;
-int alerta;
 bool eco;
 u_long timeStampAnalise;
 char buffer[100];
 
 uint32_t estadoAc = 0;
 int temperaturaAc = 24;
-uint32_t modoAc = 10;
-uint32_t ventoAc = 10;
+uint32_t modoAc = 0;
+uint32_t ventoAc = 4;
 
 uint32_t estadoProjetor = 0;
 uint32_t estadoFreezeProjetor = 0;
@@ -89,11 +93,11 @@ void configurarEventosNextion()
     botaoLuzA1.attachPop([]()
                          {
         botaoLuzA1.getValue(&estadoLuzes[0][0]);
-        serializeLampada(9, 0, estadoLuzes[0][0]); });
+        serializeLampada(9, 1, estadoLuzes[0][0]); });
     botaoLuzB1.attachPop([]()
                          {
         botaoLuzB1.getValue(&estadoLuzes[0][1]);
-        serializeLampada(9, 1, estadoLuzes[0][1]); });
+        serializeLampada(9, 0, estadoLuzes[0][1]); });
     acenderTodasLuzes1.attachPop([]()
                                  { onOffTodasLuzes(1); });
     apagarTodasLuzes1.attachPop([]()
@@ -106,19 +110,19 @@ void configurarEventosNextion()
     botaoLuzA2.attachPop([]()
                          {
         botaoLuzA2.getValue(&estadoLuzes[0][0]);
-        serializeLampada(9, 0, estadoLuzes[0][0]); });
+        serializeLampada(9, 1, estadoLuzes[0][0]); });
     botaoLuzB2.attachPop([]()
                          {
         botaoLuzB2.getValue(&estadoLuzes[0][1]);
-        serializeLampada(9, 1, estadoLuzes[0][1]); });
+        serializeLampada(9, 0, estadoLuzes[0][1]); });
     botaoLuzC2.attachPop([]()
                          {
         botaoLuzC2.getValue(&estadoLuzes[1][0]);
-        serializeLampada(10, 0, estadoLuzes[1][0]); });
+        serializeLampada(10, 1, estadoLuzes[1][0]); });
     botaoLuzD2.attachPop([]()
                          {
         botaoLuzD2.getValue(&estadoLuzes[1][1]);
-        serializeLampada(10, 1, estadoLuzes[1][1]); });
+        serializeLampada(10, 0, estadoLuzes[1][1]); });
     acenderTodasLuzes2.attachPop([]()
                                  { onOffTodasLuzes(1); });
     apagarTodasLuzes2.attachPop([]()
@@ -150,44 +154,31 @@ void configurarEventosNextion()
     char bufTemp[8];
     sprintf(bufTemp, "%d", temperaturaAc);
     textoTemp1.setText(bufTemp); });
-    modoCoolAc1.attachPop([]()
-                          {
-        modoCoolAc1.getValue(&modoAc);
-        if(modoAc) modoAc = 0;updateBotoesAc(0); });
-    modoFanAc1.attachPop([]()
-                         {
-        modoFanAc1.getValue(&modoAc);
-        if(modoAc) modoAc = 1;updateBotoesAc(0); });
-    modoDryAc1.attachPop([]()
-                         {
-        modoDryAc1.getValue(&modoAc);
-        if(modoAc) modoAc = 2;updateBotoesAc(0); });
-    modoHeatAc1.attachPop([]()
-                          {
-        modoHeatAc1.getValue(&modoAc);
-        if(modoAc) modoAc = 3;updateBotoesAc(0); });
-    ventoAutoAc1.attachPop([]()
-                           {
-        ventoAutoAc1.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 0;updateBotoesAc(0); });
-    ventoBaixoAc1.attachPop([]()
-                            {
-        ventoBaixoAc1.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 1;updateBotoesAc(0); });
-    ventoMedioAc1.attachPop([]()
-                            {
-        ventoMedioAc1.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 2;updateBotoesAc(0); });
-    ventoAltoAc1.attachPop([]()
-                           {
-        ventoAltoAc1.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 3;updateBotoesAc(0); });
-    ventoSilentAc1.attachPop([]()
-                             {
-        ventoSilentAc1.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 4;updateBotoesAc(0); });
+ modoCoolAc1.attachPop([](){
+    modoAc = 0;
+    updateBotoesAc(0);
+});
+modoFanAc1.attachPop([](){
+    modoAc = 2;
+    updateBotoesAc(0);
+});
+modoDryAc1.attachPop([](){
+    modoAc = 1;
+    updateBotoesAc(0);
+});
+modoHeatAc1.attachPop([](){
+    modoAc = 3;
+    updateBotoesAc(0);
+});
+    ventoAutoAc1.attachPop([](){   ventoAc = 0; updateBotoesAc(0); });
+ventoBaixoAc1.attachPop([](){  ventoAc = 2; updateBotoesAc(0); });
+ventoMedioAc1.attachPop([](){  ventoAc = 3; updateBotoesAc(0); });
+ventoAltoAc1.attachPop([](){   ventoAc = 4; updateBotoesAc(0); });
+ventoSilentAc1.attachPop([](){  ventoAc = 1; updateBotoesAc(0); });
     confirmarConfigAc1.attachPop([]()
-                                 {serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);updateBotoesAc(1); });
+                                 {botaoAcOnOff.getValue(&estadoAc);
+    serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);
+    updateBotoesAc(1);});
 
     backAc2.attachPop([]()
                       { updateTela(0); });
@@ -218,46 +209,20 @@ diminuirTempAc2.attachPop([](){
     sprintf(bufTemp, "%d", temperaturaAc);
     textoTemp2.setText(bufTemp);
 });
-    modoCoolAc2.attachPop([]()
-                          {
-        modoCoolAc2.getValue(&modoAc);
-        if(modoAc) modoAc = 0;updateBotoesAc(0); });
-    modoFanAc2.attachPop([]()
-                         {
-        modoFanAc2.getValue(&modoAc);
-        if(modoAc) modoAc = 1;updateBotoesAc(0); });
-    modoDryAc2.attachPop([]()
-                         {
-        modoDryAc2.getValue(&modoAc);
-        if(modoAc) modoAc = 2;updateBotoesAc(0); });
-    modoHeatAc2.attachPop([]()
-                          {
-        modoHeatAc2.getValue(&modoAc);
-        if(modoAc) modoAc = 3;updateBotoesAc(0); });
-    ventoAutoAc2.attachPop([]()
-                           {
-        ventoAutoAc2.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 0;updateBotoesAc(0); });
-    ventoBaixoAc2.attachPop([]()
-                            {
-        ventoBaixoAc2.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 1;updateBotoesAc(0); });
-    ventoMedioAc2.attachPop([]()
-                            {
-        ventoMedioAc2.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 2;updateBotoesAc(0); });
-    ventoAltoAc2.attachPop([]()
-                           {
-        ventoAltoAc2.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 3;updateBotoesAc(0); });
-    ventoSilentAc2.attachPop([]()
-                             {
-        ventoSilentAc2.getValue(&ventoAc);
-        if(ventoAc) ventoAc = 4;updateBotoesAc(0); });
+    modoCoolAc2.attachPop([](){  modoAc = 0; updateBotoesAc(0); });
+    modoDryAc2.attachPop([](){   modoAc = 1; updateBotoesAc(0); });
+modoFanAc2.attachPop([](){   modoAc = 2; updateBotoesAc(0); });
+modoHeatAc2.attachPop([](){  modoAc = 3; updateBotoesAc(0); });
+    ventoAutoAc2.attachPop([](){    ventoAc = 0; updateBotoesAc(0); });
+ventoBaixoAc2.attachPop([](){   ventoAc = 2; updateBotoesAc(0); });
+ventoMedioAc2.attachPop([](){   ventoAc = 3; updateBotoesAc(0); });
+ventoAltoAc2.attachPop([](){    ventoAc = 4; updateBotoesAc(0); });
+ventoSilentAc2.attachPop([](){  ventoAc = 1; updateBotoesAc(0); });
     confirmarConfigAc2.attachPop([]()
                                  {
-        serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);
-        updateBotoesAc(1); });
+        botaoAcOnOff2.getValue(&estadoAc);
+    serializeAc(estadoAc, temperaturaAc, modoAc, ventoAc);
+    updateBotoesAc(1);});
 
     // tela projetor 5, 6
     backProj1.attachPop([]()
@@ -552,28 +517,30 @@ void deserializeModuloAnalise(const String &mensagem)
     }
 
     timeStampAnalise = analise["timestamp"].as<u_long>();
-    temperatura = analise["temperatura"].as<float>();
-    umidade = analise["umidade"].as<float>();
-    ruido = analise["ruido"].as<float>();
+    temperaturaA = analise["temperatura"].as<float>();
+    umidadeA = analise["umidade"].as<float>();
+    ruidoA = analise["ruido"].as<float>();
     comandoAr = analise["comandoAr"].as<int>();
-    alerta = analise["alertaSom"].as<int>();
+    alertaA = analise["alertaSom"].as<int>();
     eco = analise["eco"].as<bool>();
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
     char buf[20];
 
-    sprintf(buf, "%.1f", temperatura);
+    sprintf(buf, "%.1f", temperaturaA);
     textoTempLadoA.setText(buf);
 
-    sprintf(buf, "%.1f", umidade);
+    sprintf(buf, "%.1f", umidadeA);
     textoUmidadeLadoA.setText(buf);
 
-    sprintf(buf, "%.1f", ruido);
+    sprintf(buf, "%.1f", ruidoA);
     textoRuidoLadoA.setText(buf);
 
-    sprintf(buf, "%s", alerta ? "Alerta!" : "Normal");
-    textoAmbienteSensor.setText(buf);
+    if(alertaA && alertaB)
+    textoAmbienteSensor.setText("Alerta!");
+    else
+    textoAmbienteSensor.setText("Normal");
 }
 
 void deserializeModuloAnaliseB(const String &mensagem)
@@ -600,28 +567,31 @@ void deserializeModuloAnaliseB(const String &mensagem)
     }
 
     timeStampAnalise = analise["timestamp"].as<u_long>();
-    temperatura = analise["temperatura"].as<float>();
-    umidade = analise["umidade"].as<float>();
-    ruido = analise["ruido"].as<float>();
+    temperaturaB = analise["temperatura"].as<float>();
+    umidadeB = analise["umidade"].as<float>();
+    ruidoB = analise["ruido"].as<float>();
     comandoAr = analise["comandoAr"].as<int>();
-    alerta = analise["alertaSom"].as<int>();
+    alertaB = analise["alertaSom"].as<int>();
     eco = analise["eco"].as<bool>();
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
     char buf[20];
 
-    sprintf(buf, "%.1f", temperatura);
+    sprintf(buf, "%.1f", temperaturaB);
     textoTempLadoB.setText(buf);
 
-    sprintf(buf, "%.1f", umidade);
+    sprintf(buf, "%.1f", umidadeB);
     textoUmidadeLadoB.setText(buf);
 
-    sprintf(buf, "%.1f", ruido);
+    sprintf(buf, "%.1f", ruidoB);
     textoRuidoLadoB.setText(buf);
 
-    sprintf(buf, "%s", alerta ? "Alerta!" : "Normal");
-    textoAmbienteSensor.setText(buf);
+    if(alertaA && alertaB)
+    textoAmbienteSensor.setText("Alerta!");
+    else
+    textoAmbienteSensor.setText("Normal");
+
 }
 
 void updateBotoesAc(bool confirmado)
@@ -639,8 +609,14 @@ void updateBotoesAc(bool confirmado)
         ventoSilentAc1.setValue(0);
         if (confirmado)
         {
-            modoAc = 10;
-            ventoAc = 10;
+            botaoAcOnOff.setValue(0);
+            acSelecionados[0] = 0;
+            acSelecionados[1] = 0;
+
+            estadoAc = 0;
+            modoAc = 0;
+            ventoAc = 4;
+            temperaturaAc = 24;
             return;
         }
         switch (modoAc)
@@ -649,10 +625,10 @@ void updateBotoesAc(bool confirmado)
             modoCoolAc1.setValue(1);
             break;
         case 1:
-            modoFanAc1.setValue(1);
-            break;
+        modoDryAc1.setValue(1);
+        break;
         case 2:
-            modoDryAc1.setValue(1);
+        modoFanAc1.setValue(1);
             break;
         case 3:
             modoHeatAc1.setValue(1);
@@ -664,16 +640,16 @@ void updateBotoesAc(bool confirmado)
             ventoAutoAc1.setValue(1);
             break;
         case 1:
-            ventoBaixoAc1.setValue(1);
-            break;
+        ventoSilentAc1.setValue(1);
+        break;
         case 2:
-            ventoMedioAc1.setValue(1);
-            break;
+        ventoBaixoAc1.setValue(1);
+        break;
         case 3:
-            ventoAltoAc1.setValue(1);
-            break;
+        ventoMedioAc1.setValue(1);
+        break;
         case 4:
-            ventoSilentAc1.setValue(1);
+        ventoAltoAc1.setValue(1);
             break;
         }
     }
@@ -690,8 +666,16 @@ void updateBotoesAc(bool confirmado)
         ventoSilentAc2.setValue(0);
         if (confirmado)
         {
-            modoAc = 10;
-            ventoAc = 10;
+            botaoAcOnOff2.setValue(0);
+            acSelecionados[0] = 0;
+            acSelecionados[1] = 0;
+            acSelecionados[2] = 0;
+            acSelecionados[3] = 0;
+
+            estadoAc = 0;
+            modoAc = 0;
+            ventoAc = 4;
+            temperaturaAc = 24;
             return;
         }
         switch (modoAc)
@@ -700,10 +684,10 @@ void updateBotoesAc(bool confirmado)
             modoCoolAc2.setValue(1);
             break;
         case 1:
-            modoFanAc2.setValue(1);
-            break;
+        modoDryAc2.setValue(1);
+        break;
         case 2:
-            modoDryAc2.setValue(1);
+        modoFanAc2.setValue(1);
             break;
         case 3:
             modoHeatAc2.setValue(1);
@@ -715,22 +699,17 @@ void updateBotoesAc(bool confirmado)
             ventoAutoAc2.setValue(1);
             break;
         case 1:
-            ventoBaixoAc2.setValue(1);
-            break;
+        ventoSilentAc2.setValue(1);
+        break;
         case 2:
-            ventoMedioAc2.setValue(1);
-            break;
+        ventoBaixoAc2.setValue(1);
+        break;
         case 3:
-            ventoAltoAc2.setValue(1);
-            break;
+        ventoMedioAc2.setValue(1);
+        break;
         case 4:
-            ventoSilentAc2.setValue(1);
+        ventoAltoAc2.setValue(1);
             break;
         }
     }
-}
-
-void teste()
-{
-    Serial.println("detectou");
 }

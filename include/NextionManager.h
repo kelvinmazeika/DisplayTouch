@@ -18,6 +18,5 @@ void deserializeModuloAnaliseB(const String &mensagem);
 
 void updateBotoesAc(bool confirmado);
 
-void teste();
 
 #endif

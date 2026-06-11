@@ -60,7 +60,7 @@ NexButton configurarTimerLuzes2(2, 10, "b4");
 //tela ar condicionado 3, 4
 NexButton backAc1(3, 2, "b0");
 NexButton adicionarSalaExtraAc(3, 3, "b1");
-NexText textoTemp1(3, 9, "t0");
+NexText textoTemp1(3, 9, "tempA");
 
 NexDSButton botaoAcOnOff(3, 4, "bt0");
 NexDSButton selecionarAcA1(3, 5, "bt1");
@@ -80,7 +80,7 @@ NexButton confirmarConfigAc1(3, 19, "b4");
 
 NexButton backAc2(4, 2, "b0");
 NexButton removerSalaExtraAc(4, 3, "b1");
-NexText textoTemp2(4, 11, "t0");
+NexText textoTemp2(4, 11, "tempB");
 
 NexDSButton botaoAcOnOff2(4, 4, "bt0");
 NexDSButton selecionarAcA2(4, 5, "bt1");

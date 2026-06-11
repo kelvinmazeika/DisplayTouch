@@ -19,7 +19,7 @@ void iniciaTimestamp()
     tempo.setLocation("America/Sao_Paulo");
 }
 
-void serializeAc(bool estado, int temp, int modo, int vento)
+void serializeAc(int estado, int temp, int modo, int vento)
 {
     if (acSelecionados[0] == 1 && acSelecionados[1] == 1 && acSelecionados[2] == 1 && acSelecionados[3] == 1)
     {
@@ -41,7 +41,7 @@ void serializeAc(bool estado, int temp, int modo, int vento)
         {
             JsonDocument doc;
             doc["ar-condicionado"]["esp"] = (i < 2) ? 1 : 2;
-            doc["ar-condicionado"]["id_ar"] = i;
+            doc["ar-condicionado"]["id_ar"] = i + 1;
             doc["ar-condicionado"]["estado"] = estado;
             doc["ar-condicionado"]["temperatura"] = temp;
             doc["ar-condicionado"]["modo"] = modo;
@@ -87,17 +87,18 @@ void serializeLampada(int sala, bool lampadaFrente, int estadoLampada)
     debugInfo(mensagemLuz);
 }
 
-void onOffTodasLuzes(bool estadoLuzes)
+void onOffTodasLuzes(int estadoLuzes)
 {
     JsonDocument doc;
     doc["lampadaSala09"]["interruptor1"] = estadoLuzes;
     doc["lampadaSala09"]["interruptor2"] = estadoLuzes;
+    doc["lampadaSala09"]["timestamp"] = tempo.now();
     if (luzSalaExtra)
     {
         doc["lampadaSala10"]["interruptor3"] = estadoLuzes;
         doc["lampadaSala10"]["interruptor4"] = estadoLuzes;
+        doc["lampadaSala10"]["timestamp"] = tempo.now();
     }
-    doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemLuz);
     conectividade.publicar(TOPICO_LAMP, mensagemLuz.c_str());
     debugInfo(mensagemLuz);
@@ -108,6 +109,7 @@ void serializeProjetor(int power, int congelamento)
     JsonDocument doc;
     doc["projetor"]["estadoPower"] = power;
     doc["projetor"]["estadoCongelamento"] = congelamento;
+    doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemProj);
     debugInfo(mensagemProj);
 
