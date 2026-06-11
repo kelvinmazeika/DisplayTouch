@@ -190,9 +190,7 @@ src/
   }
 }
 ```
-```
 
-```
 ---
 
 ## 📱 Telas da Interface
