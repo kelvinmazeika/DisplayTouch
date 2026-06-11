@@ -39,11 +39,10 @@ const char MQTT_CERTIFICADO_CA[] PROGMEM = R"EOF()EOF";
 
 const char* TOPICOS_PUBLICAR[] = 
 {
-    "senai134/shared/projeto/yoshi",
+    "senai134/shared/projeto/TV",
     "senai134/shared/projeto/AC",
     "senai134/shared/projeto/telaRetratil",
-    "senai134/shared/projeto/projetor09",
-    "senai134/shared/projeto/projetor10",
+    "senai134/shared/projeto/projetor",
     "senai134/shared/projeto/lampada"
     
 };

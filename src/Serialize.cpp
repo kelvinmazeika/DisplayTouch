@@ -57,8 +57,8 @@ void serializeAc(int estado, int temp, int modo, int vento)
 void serializeTv(int comando)
 {
     JsonDocument doc;
-    doc["televisao"]["comando"] = comando;
-    doc["televisao"]["timestamp"] = tempo.now();
+    doc["comando"] = comando;
+    doc["timestamp"] = tempo.now();
     serializeJson(doc, mensagemTv);
     conectividade.publicar(TOPICO_TV, mensagemTv.c_str());
     debugInfo(mensagemTv);
@@ -104,36 +104,42 @@ void onOffTodasLuzes(int estadoLuzes)
     debugInfo(mensagemLuz);
 }
 
-void serializeProjetor(int power, int congelamento)
+void serializeProjetor(int acao)
 {
     JsonDocument doc;
-    doc["projetor"]["estadoPower"] = power;
-    doc["projetor"]["estadoCongelamento"] = congelamento;
+    if(acao == 0)
+    doc["power"] = 0;
+    else if(acao == 1)
+    doc["power"] = 1;
+    else if(acao == 2)
+    doc["freeze"] = 0;
+    else if(acao == 3)
+    doc["freeze"] = 1;
     doc["timestamp"] = tempo.now();
-    serializeJson(doc, mensagemProj);
     debugInfo(mensagemProj);
-
+    
     if (projSalaExtra)
     {
         for (int i = 0; i < 2; i++)
         {
             if (projetoresSelecionados[i] == 1)
             {
-
-                if (i == 0)
-                    conectividade.publicar(TOPICO_PROJ_09, mensagemProj.c_str());
-                else
-                    conectividade.publicar(TOPICO_PROJ_10, mensagemProj.c_str());
+                doc["id"] = i+1;
+                serializeJson(doc, mensagemProj);
+                conectividade.publicar(TOPICO_PROJ, mensagemProj.c_str());
             }
         }
+        return;
     }
     else
     {
-        conectividade.publicar(TOPICO_PROJ_09, mensagemProj.c_str());
+        doc["id"] = 1;
+        serializeJson(doc, mensagemProj);
+        conectividade.publicar(TOPICO_PROJ, mensagemProj.c_str());
     }
 }
 
-void serializeTelaRetratil(bool up, bool down, bool pause)
+void serializeTelaRetratil(int acao)
 {
     if (projSalaExtra)
     {
@@ -143,11 +149,13 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
             {
                 JsonDocument doc;
                 doc["telaRetratil"]["tela"] = i;
-                doc["telaRetratil"]["UP"] = up;
-                doc["telaRetratil"]["PAUSE"] = pause;
-                doc["telaRetratil"]["DOWN"] = down;
+                if(acao == 0)
+                doc["telaRetratil"]["comando"] = 0;
+                else if(acao == 1)
+                doc["telaRetratil"]["comando"] = 1;
+                else if(acao == 2)
+                doc["telaRetratil"]["comando"] = 2;
                 doc["telaRetratil"]["timestamp"] = tempo.now();
-                doc["telaRetratil"]["tempo"] = tempo.dateTime();
                 serializeJson(doc, mensagemTela);
                 conectividade.publicar(TOPICO_TELA, mensagemTela.c_str());
                 debugInfo(mensagemTela);
@@ -158,11 +166,13 @@ void serializeTelaRetratil(bool up, bool down, bool pause)
     {
         JsonDocument doc;
         doc["telaRetratil"]["tela"] = 0;
-        doc["telaRetratil"]["UP"] = up;
-        doc["telaRetratil"]["PAUSE"] = pause;
-        doc["telaRetratil"]["DOWN"] = down;
+        if(acao == 0)
+                doc["telaRetratil"]["comando"] = 0;
+                else if(acao == 1)
+                doc["telaRetratil"]["comando"] = 1;
+                else if(acao == 2)
+                doc["comando"] = 2;
         doc["telaRetratil"]["timestamp"] = tempo.now();
-        doc["telaRetratil"]["tempo"] = tempo.dateTime();
         serializeJson(doc, mensagemTela);
         conectividade.publicar(TOPICO_TELA, mensagemTela.c_str());
         debugInfo(mensagemTela);

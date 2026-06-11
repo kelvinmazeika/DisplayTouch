@@ -31,7 +31,7 @@ char buffer[100];
 uint32_t estadoAc = 0;
 int temperaturaAc = 24;
 uint32_t modoAc = 0;
-uint32_t ventoAc = 4;
+uint32_t ventoAc = 1;
 
 uint32_t estadoProjetor = 0;
 uint32_t estadoFreezeProjetor = 0;
@@ -233,54 +233,42 @@ ventoSilentAc2.attachPush([](){  ventoAc = 1; updateBotoesAc(0); });
                                      { addSalaExtra(2); });
 
     telaRetratilUp1.attachPush([]()
-                              { serializeTelaRetratil(1, 0, 0); });
+                              { serializeTelaRetratil(0); });
     telaRetratilStop1.attachPush([]()
-                                { serializeTelaRetratil(0, 0, 1); });
+                                { serializeTelaRetratil(2); });
     telaRetratilDown1.attachPush([]()
-                                { serializeTelaRetratil(0, 1, 0); });
+                                { serializeTelaRetratil(1); });
     projetorFreeze1.attachPush([]()
                               {
     projetorFreeze1.getValue(&estadoProjFreeze[0]);
-    if (estadoProj[0] == 0)                
-    {
-        estadoProjFreeze[0] = 0;         
-        projetorFreeze1.setValue(0);     
-        debugInfo("Freeze ignorado: projetor 1 desligado");
-        return;
-    }
-    serializeProjetor(estadoProj[0], estadoProjFreeze[0]); });
+    if(estadoProjFreeze[0])
+    serializeProjetor(2);
+else
+serializeProjetor(3);});
 
     projetorFreeze2.attachPush([]()
                               {
     projetorFreeze2.getValue(&estadoProjFreeze[1]);
-    if (estadoProj[1] == 0)
-    {
-        estadoProjFreeze[1] = 0;
-        projetorFreeze2.setValue(0);
-        debugInfo("Freeze ignorado: projetor 2 desligado");
-        return;
-    }
-    serializeProjetor(estadoProj[1], estadoProjFreeze[1]); });
+    if(estadoProjFreeze[1])
+    serializeProjetor(2);
+else
+serializeProjetor(3);});
 
     projetorOnOff1.attachPush([]()
                              {
     projetorOnOff1.getValue(&estadoProj[0]);
-    if (estadoProj[0] == 0)            
-    {
-        estadoProjFreeze[0] = 0;
-        projetorFreeze1.setValue(0);
-    }
-    serializeProjetor(estadoProj[0], estadoProjFreeze[0]); });
+    if(estadoProj[0])
+    serializeProjetor(0);
+else
+serializeProjetor(1);});
 
     projetorOnOff2.attachPush([]()
                              {
     projetorOnOff2.getValue(&estadoProj[1]);
-    if (estadoProj[1] == 0)
-    {
-        estadoProjFreeze[1] = 0;
-        projetorFreeze2.setValue(0);
-    }
-    serializeProjetor(estadoProj[1], estadoProjFreeze[1]); });
+    if(estadoProj[1])
+    serializeProjetor(0);
+else
+serializeProjetor(1);});
     backProj2.attachPush([]()
                         { updateTela(0); });
     removerSalaExtraProj.attachPush([]()
@@ -290,11 +278,11 @@ ventoSilentAc2.attachPush([](){  ventoAc = 1; updateBotoesAc(0); });
     selecionarProjetorB.attachPush([]()
                                   { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]); });
     telaRetratilUp2.attachPush([]()
-                              { serializeTelaRetratil(1, 0, 0); });
+                              { serializeTelaRetratil(0); });
     telaRetratilStop2.attachPush([]()
-                                { serializeTelaRetratil(0, 0, 1); });
+                                { serializeTelaRetratil(2); });
     telaRetratilDown2.attachPush([]()
-                                { serializeTelaRetratil(0, 1, 0); });
+                                { serializeTelaRetratil(1); });
 
     // tela tv 7
     backTv.attachPush([]()
@@ -444,6 +432,34 @@ void updateTela(int modulo)
         break;
     case 5:
         sendCommand("page sensores");
+        char buf[20];
+
+    if(temperaturaA > 0){
+    sprintf(buf, "%.1f", temperaturaA);
+    textoTempLadoA.setText(buf);}
+    
+    if(umidadeA > 0){
+    sprintf(buf, "%.1f", umidadeA);
+    textoUmidadeLadoA.setText(buf);}
+    
+    sprintf(buf, "%.1f", ruidoA);
+    textoRuidoLadoA.setText(buf);
+
+    if(temperaturaB > 0){
+    sprintf(buf, "%.1f", temperaturaB);
+    textoTempLadoB.setText(buf);}
+    
+    if(umidadeB > 0){
+    sprintf(buf, "%.1f", umidadeB);
+    textoUmidadeLadoB.setText(buf);}
+    
+    sprintf(buf, "%.1f", ruidoB);
+    textoRuidoLadoB.setText(buf);
+
+    if(alertaA && alertaB)
+    textoAmbienteSensor.setText("Alerta!");
+    else
+    textoAmbienteSensor.setText("Normal");
         break;
     case 6:
         sendCommand("page settings");
@@ -541,6 +557,17 @@ void deserializeModuloAnalise(const String &mensagem)
     sprintf(buf, "%.1f", ruidoA);
     textoRuidoLadoA.setText(buf);
 
+    if(temperaturaB > 0){
+    sprintf(buf, "%.1f", temperaturaB);
+    textoTempLadoB.setText(buf);}
+    
+    if(umidadeB > 0){
+    sprintf(buf, "%.1f", umidadeB);
+    textoUmidadeLadoB.setText(buf);}
+    
+    sprintf(buf, "%.1f", ruidoB);
+    textoRuidoLadoB.setText(buf);
+
     if(alertaA && alertaB)
     textoAmbienteSensor.setText("Alerta!");
     else
@@ -582,6 +609,17 @@ void deserializeModuloAnaliseB(const String &mensagem)
 
     char buf[20];
 
+    if(temperaturaA > 0){
+    sprintf(buf, "%.1f", temperaturaA);
+    textoTempLadoA.setText(buf);}
+    
+    if(umidadeA > 0){
+    sprintf(buf, "%.1f", umidadeA);
+    textoUmidadeLadoA.setText(buf);}
+    
+    sprintf(buf, "%.1f", ruidoA);
+    textoRuidoLadoA.setText(buf);
+
     if(temperaturaB > 0){
     sprintf(buf, "%.1f", temperaturaB);
     textoTempLadoB.setText(buf);}
@@ -616,6 +654,8 @@ void updateBotoesAc(bool confirmado)
         if (confirmado)
         {
             botaoAcOnOff.setValue(0);
+            selecionarAcA1.setValue(0);
+            selecionarAcB1.setValue(0);
             acSelecionados[0] = 0;
             acSelecionados[1] = 0;
 
@@ -673,6 +713,10 @@ void updateBotoesAc(bool confirmado)
         if (confirmado)
         {
             botaoAcOnOff2.setValue(0);
+            selecionarAcA2.setValue(0);
+            selecionarAcB2.setValue(0);
+            selecionarAcC2.setValue(0);
+            selecionarAcD2.setValue(0);
             acSelecionados[0] = 0;
             acSelecionados[1] = 0;
             acSelecionados[2] = 0;
