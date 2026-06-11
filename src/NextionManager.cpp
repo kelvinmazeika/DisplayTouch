@@ -530,12 +530,14 @@ void deserializeModuloAnalise(const String &mensagem)
 
     char buf[20];
 
+    if(temperaturaA > 0){
     sprintf(buf, "%.1f", temperaturaA);
-    textoTempLadoA.setText(buf);
-
+    textoTempLadoA.setText(buf);}
+    
+    if(umidadeA > 0){
     sprintf(buf, "%.1f", umidadeA);
-    textoUmidadeLadoA.setText(buf);
-
+    textoUmidadeLadoA.setText(buf);}
+    
     sprintf(buf, "%.1f", ruidoA);
     textoRuidoLadoA.setText(buf);
 
@@ -580,12 +582,14 @@ void deserializeModuloAnaliseB(const String &mensagem)
 
     char buf[20];
 
+    if(temperaturaB > 0){
     sprintf(buf, "%.1f", temperaturaB);
-    textoTempLadoB.setText(buf);
-
+    textoTempLadoB.setText(buf);}
+    
+    if(umidadeB > 0){
     sprintf(buf, "%.1f", umidadeB);
-    textoUmidadeLadoB.setText(buf);
-
+    textoUmidadeLadoB.setText(buf);}
+    
     sprintf(buf, "%.1f", ruidoB);
     textoRuidoLadoB.setText(buf);
 
