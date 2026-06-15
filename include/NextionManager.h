@@ -18,5 +18,7 @@ void deserializeModuloAnaliseB(const String &mensagem);
 
 void updateBotoesAc(bool confirmado);
 
+void tratarMensagemRecebida(const char *topico, const String &mensagem)
+
 
 #endif

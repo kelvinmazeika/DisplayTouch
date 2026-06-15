@@ -19,8 +19,8 @@ ConfigAWS aws = {
 ConfigWiFi wifi = {ssid, password};
 
 ConfigTopicos topicos = {
-    TOPICOS_PUBLICAR, 6,
-    TOPICOS_RECEBER, 3};
+    TOPICOS_PUBLICAR, TOTAL_TOPICOS_PUBLICAR,
+    TOPICOS_RECEBER, TOTAL_TOPICOS_RECEBER};
 
 void tratarMensagemRecebida(const char *topico, const String &mensagem);
 
@@ -50,27 +50,4 @@ void loop()
   conectividade.update();
   events();
   nexLoop();
-}
-
-void tratarMensagemRecebida(const char *topico, const String &mensagem)
-{
-
-  if (topico == nullptr)
-  {
-    debugErro("Tópico MQTT inválido");
-    return;
-  }
-
-  if (strcmp(topico, TOPICOS_RECEBER[0]) == 0)
-  {
-    deserializeModuloAnalise(mensagem);
-    return;
-  }
-  if (strcmp(topico, TOPICOS_RECEBER[1]) == 0)
-  {
-    deserializeModuloAnaliseB(mensagem);
-    return;
-  }
-
-  debugErro("Tópico não tratado: " + String(topico));
 }

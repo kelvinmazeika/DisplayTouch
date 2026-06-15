@@ -5,6 +5,7 @@
 #include "Serialize.h"
 #include <ArduinoJson.h>
 #include "DebugManager.h"
+#include "secrets.h"
 
 // =========================================================
 // Variaveis de estado dos módulos e da tela
@@ -759,4 +760,27 @@ void updateBotoesAc(bool confirmado)
             break;
         }
     }
+}
+
+void tratarMensagemRecebida(const char *topico, const String &mensagem)
+{
+
+  if (topico == nullptr)
+  {
+    debugErro("Tópico MQTT inválido");
+    return;
+  }
+
+  if (strcmp(topico, TOPICOS_RECEBER[0]) == 0)
+  {
+    deserializeModuloAnalise(mensagem);
+    return;
+  }
+  if (strcmp(topico, TOPICOS_RECEBER[1]) == 0)
+  {
+    deserializeModuloAnaliseB(mensagem);
+    return;
+  }
+
+  debugErro("Tópico não tratado: " + String(topico));
 }
