@@ -13,8 +13,8 @@ Preferences prefs;
 void carregarPreferencias()
 {
     prefs.begin("config", false);
-    luzSalaExtra  = prefs.getBool("luzExtra",  false);
-    arSalaExtra   = prefs.getBool("arExtra",   false);
+    luzSalaExtra = prefs.getBool("luzExtra",  false);
+    arSalaExtra = prefs.getBool("arExtra",   false);
     projSalaExtra = prefs.getBool("projExtra", false);
     prefs.end();
 }

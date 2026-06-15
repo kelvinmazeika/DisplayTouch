@@ -43,9 +43,6 @@ const int8_t PINO_RX_NEXTION = 18;
 const int8_t PINO_TX_NEXTION = 17;
 char texto[50];
 
-// =========================================================
-// PROTÓTIPOS DAS FUNÇÕES
-// =========================================================
 
 void configurarNextion()
 {
