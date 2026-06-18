@@ -29,5 +29,4 @@ void serializeTelaRetratil(int acao);
 void onOffTodasLuzes(int estadoLuzes);
 
 
-
 #endif

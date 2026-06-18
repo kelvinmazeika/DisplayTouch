@@ -248,17 +248,17 @@ serializeProjetor(3);});
                               {
     projetorFreeze2.getValue(&estadoProjFreeze[1]);
     if(estadoProjFreeze[1])
-    serializeProjetor(2);
+    serializeProjetor(3);
 else
-serializeProjetor(3);});
+serializeProjetor(2);});
 
     projetorOnOff1.attachPush([]()
                              {
     projetorOnOff1.getValue(&estadoProj[0]);
     if(estadoProj[0])
-    serializeProjetor(0);
+    serializeProjetor(1);
 else
-serializeProjetor(1);});
+serializeProjetor(0);});
 
     projetorOnOff2.attachPush([]()
                              {
@@ -272,9 +272,9 @@ serializeProjetor(1);});
     removerSalaExtraProj.attachPush([]()
                                    { removeSalaExtra(2); });
     selecionarProjetorA.attachPush([]()
-                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); Serial.printf("Projetor A:%d", projetoresSelecionados[0]); });
+                                  { selecionarProjetorA.getValue(&projetoresSelecionados[0]); Serial.printf("Projetor A:%d", projetoresSelecionados[0]);});
     selecionarProjetorB.attachPush([]()
-                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]); });
+                                  { selecionarProjetorB.getValue(&projetoresSelecionados[1]); Serial.printf("Projetor B:%d", projetoresSelecionados[1]);});
     telaRetratilUp2.attachPush([]()
                               { serializeTelaRetratil(0); });
     telaRetratilStop2.attachPush([]()
@@ -409,27 +409,43 @@ void updateTela(int modulo)
         break;
     case 1:
         if (luzSalaExtra)
-            sendCommand("page luz1");
+            {sendCommand("page luz1");
+            botaoLuzA2.setValue(estadoLuzes[0][0]);
+            botaoLuzB2.setValue(estadoLuzes[0][1]);
+            botaoLuzC2.setValue(estadoLuzes[1][0]);
+            botaoLuzD2.setValue(estadoLuzes[1][1]);}
         else
-            sendCommand("page luz0");
+            {sendCommand("page luz0");
+            botaoLuzA1.setValue(estadoLuzes[0][0]);
+            botaoLuzB1.setValue(estadoLuzes[0][1]);}
         break;
     case 2:
         if (arSalaExtra)
-            sendCommand("page ac1");
+            {sendCommand("page ac1");
+            selecionarAcA2.setValue(acSelecionados[0]);
+            selecionarAcB2.setValue(acSelecionados[1]);
+            selecionarAcC2.setValue(acSelecionados[2]);
+            selecionarAcD2.setValue(acSelecionados[3]);
+        
+        }
         else
-            sendCommand("page ac0");
+            {sendCommand("page ac0");
+            selecionarAcA1.setValue(acSelecionados[0]);
+            selecionarAcB1.setValue(acSelecionados[1]);}
         break;
     case 3:
         if (projSalaExtra)
             sendCommand("page projetor1");
         else
-            sendCommand("page projetor0");
+            {sendCommand("page projetor0");
+            projetorOnOff1.setValue(estadoProj[0]);
+        projetorFreeze1.setValue(estadoProjFreeze[0]);}
         break;
     case 4:
         sendCommand("page tv");
         break;
     case 5:
-        sendCommand("page sensores");
+    {    sendCommand("page sensores");
         char buf[20];
 
     if(temperaturaA > 0){
@@ -457,7 +473,7 @@ void updateTela(int modulo)
     if(alertaA && alertaB)
     textoAmbienteSensor.setText("Alerta!");
     else
-    textoAmbienteSensor.setText("Normal");
+    textoAmbienteSensor.setText("Normal");}
         break;
     case 6:
         sendCommand("page settings");
