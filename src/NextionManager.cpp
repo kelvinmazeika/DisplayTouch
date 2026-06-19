@@ -548,36 +548,49 @@ void deserializeModuloAnalise(const String &mensagem)
         return;
     }
 
+    if(analise["timestamp"].is<JsonObject>())
     timeStampAnalise = analise["timestamp"].as<u_long>();
+
+    if(analise["temperatura"].is<JsonObject>())
     temperaturaA = analise["temperatura"].as<float>();
+    
+    if(analise["umidade"].is<JsonObject>())
     umidadeA = analise["umidade"].as<float>();
+
+    if(analise["ruido"].is<JsonObject>())
     ruidoA = analise["ruido"].as<float>();
+
+    if(analise["comandoAr"].is<JsonObject>())
     comandoAr = analise["comandoAr"].as<int>();
+
+    if(analise["alertaSom"].is<JsonObject>())
     alertaA = analise["alertaSom"].as<int>();
+
+    if(analise["eco"].is<JsonObject>())
     eco = analise["eco"].as<bool>();
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
     char buf[20];
 
-    if(temperaturaA > 0){
-    sprintf(buf, "%.1f", temperaturaA);
-    textoTempLadoA.setText(buf);}
     
-    if(umidadeA > 0){
+    sprintf(buf, "%.1f", temperaturaA);
+    textoTempLadoA.setText(buf);
+    
+    
     sprintf(buf, "%.1f", umidadeA);
-    textoUmidadeLadoA.setText(buf);}
+    textoUmidadeLadoA.setText(buf);
     
     sprintf(buf, "%.1f", ruidoA);
     textoRuidoLadoA.setText(buf);
 
-    if(temperaturaB > 0){
-    sprintf(buf, "%.1f", temperaturaB);
-    textoTempLadoB.setText(buf);}
     
-    if(umidadeB > 0){
+    sprintf(buf, "%.1f", temperaturaB);
+    textoTempLadoB.setText(buf);
+    
+    
     sprintf(buf, "%.1f", umidadeB);
-    textoUmidadeLadoB.setText(buf);}
+    textoUmidadeLadoB.setText(buf);
     
     sprintf(buf, "%.1f", ruidoB);
     textoRuidoLadoB.setText(buf);
@@ -611,36 +624,49 @@ void deserializeModuloAnaliseB(const String &mensagem)
         return;
     }
 
+    if(analise["timestamp"].is<JsonObject>())
     timeStampAnalise = analise["timestamp"].as<u_long>();
+
+    if(analise["temperatura"].is<JsonObject>())
     temperaturaB = analise["temperatura"].as<float>();
+    
+    if(analise["umidade"].is<JsonObject>())
     umidadeB = analise["umidade"].as<float>();
+
+    if(analise["ruido"].is<JsonObject>())
     ruidoB = analise["ruido"].as<float>();
+
+    if(analise["comandoAr"].is<JsonObject>())
     comandoAr = analise["comandoAr"].as<int>();
+
+    if(analise["alertaSom"].is<JsonObject>())
     alertaB = analise["alertaSom"].as<int>();
+
+    if(analise["eco"].is<JsonObject>())
     eco = analise["eco"].as<bool>();
 
     debugInfo("Analise desserializada: timestamp=" + String(timeStampAnalise));
 
     char buf[20];
 
-    if(temperaturaA > 0){
+
     sprintf(buf, "%.1f", temperaturaA);
-    textoTempLadoA.setText(buf);}
+    textoTempLadoA.setText(buf);
     
-    if(umidadeA > 0){
+
     sprintf(buf, "%.1f", umidadeA);
-    textoUmidadeLadoA.setText(buf);}
+    textoUmidadeLadoA.setText(buf);
     
     sprintf(buf, "%.1f", ruidoA);
     textoRuidoLadoA.setText(buf);
 
-    if(temperaturaB > 0){
+
     sprintf(buf, "%.1f", temperaturaB);
-    textoTempLadoB.setText(buf);}
+    textoTempLadoB.setText(buf);
     
-    if(umidadeB > 0){
+
     sprintf(buf, "%.1f", umidadeB);
-    textoUmidadeLadoB.setText(buf);}
+    textoUmidadeLadoB.setText(buf);
     
     sprintf(buf, "%.1f", ruidoB);
     textoRuidoLadoB.setText(buf);
